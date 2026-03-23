@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GlowCard } from './GlowCard';
 import { supabase, Project } from '../lib/supabase';
@@ -12,6 +12,99 @@ export const Work = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Filter[]>([]);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const scrollCarousel = (dir: 'left' | 'right') => {
+    carouselRef.current?.scrollBy({ left: dir === 'left' ? -340 : 340, behavior: 'smooth' });
+  };
+
+  const COMPANY_STORIES = [
+    {
+      company: 'PSA Peugeot Citroën',
+      role: 'Human Factors Researcher',
+      period: '2016',
+      tagline: 'Proved that engineered sound reduces driver arousal — and ruled out a harmful variant before it shipped.',
+      counterintuitive: 'Stationary sound had zero effect. Variable speed caused harm.',
+      metrics: [{ value: '−20%', label: 'Arousal (EDA)' }, { value: '85%', label: 'Relaxation rate' }],
+      slug: 'psa-peugeot-neural-up',
+      gradient: 'from-slate-100 to-slate-200',
+      accent: 'bg-slate-800',
+      letter: 'P',
+    },
+    {
+      company: 'Renault',
+      role: 'Lead UX Researcher',
+      period: '2018–2021',
+      tagline: 'Built the first validated framework for AI attachment in automotive contexts — adopted across three Alliance brands.',
+      counterintuitive: 'Emotional warmth doesn\'t drive acceptance. Utility does (β=0.49).',
+      metrics: [{ value: '3 brands', label: 'Renault / Nissan / Mitsubishi' }, { value: '5', label: 'Design principles adopted' }],
+      slug: 'renault-ai-living',
+      gradient: 'from-yellow-50 to-amber-50',
+      accent: 'bg-amber-500',
+      letter: 'R',
+    },
+    {
+      company: 'Glovo',
+      role: 'UX Researcher',
+      period: '2021–2023',
+      tagline: 'A three-year programme that redesigned the support experience for 40,000+ couriers across 25 countries.',
+      counterintuitive: 'Couriers weren\'t confused — they were deliberately bypassing the IA to reach a human.',
+      metrics: [{ value: '+58%', label: 'Findability (tree test)' }, { value: '−23%', label: 'Support escalation' }],
+      slug: 'glovo-courier-support',
+      gradient: 'from-orange-50 to-yellow-50',
+      accent: 'bg-orange-400',
+      letter: 'G',
+    },
+    {
+      company: 'HP',
+      role: 'Lead UX Researcher',
+      period: '2022–2024',
+      tagline: '8+ research projects that reframed HP\'s eCommerce strategy — finding that financing is a delight trigger, not a decision driver.',
+      counterintuitive: 'Customers don\'t use financing to decide what to buy. They discover it after.',
+      metrics: [{ value: '8+', label: 'Research projects' }, { value: 'E2E', label: 'Journey architecture delivered' }],
+      slug: 'hp-ecommerce',
+      gradient: 'from-blue-50 to-sky-50',
+      accent: 'bg-blue-600',
+      letter: 'H',
+    },
+    {
+      company: 'V+D',
+      role: 'AI Automation Consultant',
+      period: '2025',
+      tagline: 'Turned 2–3 hours of manual client onboarding into a 15-minute automated flow — personalised and scalable.',
+      counterintuitive: 'The hard part wasn\'t the automation. It was replicating their voice in the AI-generated briefs.',
+      metrics: [{ value: '3h→15m', label: 'Onboarding time' }, { value: '100%', label: 'Data consistency' }],
+      slug: 'vd-automation-suite',
+      gradient: 'from-gray-800 to-gray-900',
+      accent: 'bg-white',
+      letter: 'V',
+      dark: true,
+    },
+    {
+      company: 'Momentum',
+      role: 'UX Researcher & Product Designer',
+      period: '2024',
+      tagline: 'Validated an AI coaching concept across three markets and produced four high-priority design directions from user research.',
+      counterintuitive: 'Users had motivation. What they lacked was structure — a clear "what next" after the goal.',
+      metrics: [{ value: '15', label: 'Participants (ES/FR/UK)' }, { value: '4', label: 'Design directions validated' }],
+      slug: 'momentum-app',
+      gradient: 'from-teal-50 to-cyan-50',
+      accent: 'bg-teal-500',
+      letter: 'M',
+    },
+    {
+      company: 'SoundJourney',
+      role: 'Product Designer & PM',
+      period: '2025',
+      tagline: 'Designed a Spotify-connected travel discovery product from first principles — algorithm, PRD, and 8-week MVP roadmap.',
+      counterintuitive: 'The constraint wasn\'t music matching. It was that showing a confidence score creates anxiety.',
+      metrics: [{ value: 'Full PRD', label: 'Strategy + algorithm + roadmap' }, { value: '4-level', label: 'Matching hierarchy' }],
+      slug: 'soundjourney-product',
+      gradient: 'from-indigo-50 to-purple-50',
+      accent: 'bg-indigo-500',
+      letter: 'S',
+    },
+  ];
 
   const toggleFaq = (e: React.MouseEvent<HTMLButtonElement>) => {
     const btn = e.currentTarget;
@@ -135,6 +228,86 @@ export const Work = () => {
         <div className="text-primary text-[11px] font-medium uppercase tracking-label mb-4">Selected Work</div>
         <h2 className="text-5xl md:text-6xl font-heading font-bold text-text tracking-tight mb-6">A few things I've worked on.</h2>
         <p className="text-xl text-grey max-w-2xl mb-12">Nine years across automotive, delivery, and eCommerce. A curated set of projects that show how I approach problems — and what happens after the research is done.</p>
+
+        {/* Company Stories Carousel */}
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="text-primary text-[11px] font-medium uppercase tracking-label mb-2">Company Stories</div>
+              <h2 className="text-2xl font-heading font-bold text-text">The full story, by company.</h2>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => scrollCarousel('left')}
+                className="w-10 h-10 rounded-full border border-cardborder bg-white hover:bg-surface transition-colors flex items-center justify-center text-grey hover:text-text"
+                aria-label="Scroll left"
+              >
+                ←
+              </button>
+              <button
+                onClick={() => scrollCarousel('right')}
+                className="w-10 h-10 rounded-full border border-cardborder bg-white hover:bg-surface transition-colors flex items-center justify-center text-grey hover:text-text"
+                aria-label="Scroll right"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={carouselRef}
+            className="flex gap-5 overflow-x-auto pb-4"
+            style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {COMPANY_STORIES.map(story => (
+              <Link
+                key={story.slug}
+                to={`/work/${story.slug}`}
+                className="group flex-shrink-0 w-72 rounded-2xl border border-cardborder overflow-hidden hover:shadow-md transition-shadow"
+                style={{ scrollSnapAlign: 'start' }}
+              >
+                {/* Card header */}
+                <div className={`bg-gradient-to-br ${story.gradient} p-6 flex items-start justify-between`}>
+                  <div>
+                    <div className={`w-10 h-10 rounded-full ${story.accent} flex items-center justify-center mb-3`}>
+                      <span className={`font-bold text-lg ${story.dark ? 'text-gray-800' : 'text-white'}`}>{story.letter}</span>
+                    </div>
+                    <div className={`text-xs font-bold uppercase tracking-wider mb-0.5 ${story.dark ? 'text-gray-300' : 'text-grey'}`}>{story.period}</div>
+                    <div className={`font-heading font-bold text-lg leading-tight ${story.dark ? 'text-white' : 'text-text'}`}>{story.company}</div>
+                  </div>
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${story.dark ? 'border-white/20 text-gray-300' : 'border-cardborder text-grey bg-white/60'}`}>
+                    {story.role.split(' ')[0] === 'Lead' ? 'Lead' : story.role.split('&')[0].trim().split(' ').slice(-1)[0]}
+                  </span>
+                </div>
+
+                {/* Card body */}
+                <div className="bg-white p-6">
+                  <p className="text-sm text-grey leading-relaxed mb-5 line-clamp-3">{story.tagline}</p>
+
+                  {/* Key insight */}
+                  <div className="bg-surface rounded-lg px-4 py-3 mb-5">
+                    <div className="text-[9px] font-bold uppercase tracking-widest text-primary mb-1">Key insight</div>
+                    <p className="text-xs text-grey italic leading-relaxed">{story.counterintuitive}</p>
+                  </div>
+
+                  {/* Metrics */}
+                  <div className="grid grid-cols-2 gap-3 mb-5">
+                    {story.metrics.map((m, i) => (
+                      <div key={i} className="text-center bg-gray-50 rounded-lg py-3 px-2">
+                        <div className="text-lg font-bold text-teal leading-none mb-1">{m.value}</div>
+                        <div className="text-[10px] text-grey font-medium leading-tight">{m.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="text-primary text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Read the story &rarr;
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* Impact numbers — sourced from impact-map.md */}
         <div className="mb-10">
