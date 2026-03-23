@@ -1,243 +1,38 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { GlowCard } from './GlowCard';
 import { supabase, Project } from '../lib/supabase';
 import { WorkFilters } from './ui/work-filters';
-import { Filter } from './ui/filters';
+import { Filter, FilterType, FilterOperator } from './ui/filters';
+import { portfolioProjects } from '../data/portfolioData';
 
-const CaseStudyTemplate = ({ project, onBack }: { project: any, onBack: () => void }) => {
-  return (
-    <div className="pt-24 min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto px-8 py-12">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-3 text-sm mb-8">
-          <button onClick={onBack} className="text-gray-500 hover:text-gray-900 transition-colors">Work</button>
-          <span className="text-gray-300">&rarr;</span>
-          <span className="text-gray-900 font-medium">{project.company}</span>
-          <span className="bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider py-1 px-2 rounded">{project.discipline}</span>
-        </div>
-
-        {/* Header */}
-        <h1 className="text-5xl md:text-6xl font-heading font-bold text-gray-900 tracking-tight mb-6">
-          {project.title}
-        </h1>
-        <p className="text-xl text-gray-600 max-w-3xl leading-relaxed mb-16">
-          {project.description}
-        </p>
-
-        {/* Hero Image Placeholder */}
-        <div className="w-full aspect-[21/9] bg-gray-100 rounded-2xl mb-24 flex items-center justify-center">
-          <svg className="w-16 h-16 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          {/* Left Column */}
-          <div className="lg:col-span-8 space-y-20">
-            <section>
-              <div className="text-teal-500 text-[10px] font-bold uppercase tracking-widest mb-4">The Situation</div>
-              <h2 className="text-3xl font-heading font-bold text-gray-900 mb-6">{project.situationHeading || "The context."}</h2>
-              <p className="text-gray-600 leading-relaxed">{project.situation || project.description}</p>
-            </section>
-
-            <section>
-              <div className="text-teal-500 text-[10px] font-bold uppercase tracking-widest mb-4">What I Did</div>
-              <h2 className="text-3xl font-heading font-bold text-gray-900 mb-6">Research first. Then build.</h2>
-              <p className="text-gray-600 leading-relaxed mb-8">{project.approach || "A structured approach matched to the specific question."}</p>
-              <div className="flex flex-wrap gap-3">
-                {(project.methods || []).map((tag: string, i: number) => (
-                  <span key={i} className="bg-gray-100 text-gray-600 text-xs font-medium py-2 px-4 rounded-full">{tag}</span>
-                ))}
-              </div>
-            </section>
-
-            {project.outcomes && (
-              <section>
-                <div className="text-teal-500 text-[10px] font-bold uppercase tracking-widest mb-4">The Impact</div>
-                <h2 className="text-3xl font-heading font-bold text-gray-900 mb-8">Measurable outcomes.</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {project.outcomes.map((outcome: any, i: number) => (
-                    <div key={i} className="bg-gray-50 p-8 rounded-xl text-center">
-                      <div className="text-4xl font-bold text-blue-600 mb-2">{outcome.value}</div>
-                      <div className="text-xs text-gray-600 font-medium">{outcome.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
-
-          {/* Right Sidebar */}
-          <div className="lg:col-span-4">
-            <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-8 sticky top-32">
-              <div className="space-y-8">
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Client</div>
-                  <div className="font-medium text-gray-900">{project.company}</div>
-                </div>
-                <div className="h-px bg-gray-100 w-full"></div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Discipline</div>
-                  <div className="font-medium text-gray-900">{project.discipline}</div>
-                </div>
-                <div className="h-px bg-gray-100 w-full"></div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Year</div>
-                  <div className="font-medium text-gray-900">{project.year}</div>
-                </div>
-                {project.stack && project.stack.length > 0 && (
-                  <>
-                    <div className="h-px bg-gray-100 w-full"></div>
-                    <div>
-                      <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Tools</div>
-                      <div className="font-medium text-gray-900">{project.stack.join(' · ')}</div>
-                    </div>
-                  </>
-                )}
-                <a href="mailto:jeremyguillaumedossantos@gmail.com" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg transition-colors mt-8 text-center block">
-                  Book a similar project &rarr;
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div className="bg-blue-600 py-32 mt-24">
-        <div className="max-w-4xl mx-auto px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-10">
-            Interested in similar work?
-          </h2>
-          <a href="mailto:jeremyguillaumedossantos@gmail.com" className="inline-block bg-white text-blue-600 hover:bg-gray-50 font-bold py-4 px-8 rounded-lg transition-colors">
-            Book a Discovery Call
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const staticProjects = [
-  {
-    title: "Courier Support App Redesign",
-    category: "UX Research",
-    discipline: "UX Research",
-    year: "2022",
-    bg: "bg-teal/10",
-    company: "Glovo",
-    industry: "Delivery",
-    market: "Europe",
-    methods: ["Moderated Interviews", "Open Card Sorting", "Closed Card Sorting", "Thematic Analysis"],
-    stack: ["Dovetail", "Maze", "Miro"],
-    project_type: "Discovery",
-    work_type: "In-house",
-    description: "Couriers were abandoning the support app mid-flow. I ran moderated interviews and card sorting across Spain and Portugal to understand how couriers actually categorise their problems — and redesigned the IA around their mental models.",
-    situation: "Glovo's courier support app was the primary channel for resolving delivery issues. Couriers were abandoning mid-flow or escalating to phone support, driving up operational costs. The hypothesis: the IA reflected Glovo's internal taxonomy, not how couriers think.",
-    approach: "8 moderated interviews in Spain and Portugal. Open + closed card sorting with 40 couriers via Maze. Thematic analysis revealing three distinct mental models.",
-    outcomes: [
-      { value: "23%", label: "drop in escalation rate" },
-      { value: "8 wks", label: "research to redesign launch" },
-      { value: "40+", label: "couriers in study" }
-    ],
-    content: (
-      <div className="w-full h-full border border-white/10 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-105 bg-black/5">
-        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-          <svg className="w-8 h-8 text-primary/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "AI Lead Qualification System",
-    category: "AI Automation",
-    discipline: "AI Automation",
-    year: "2024",
-    bg: "bg-navy",
-    company: "V+D (Freelance)",
-    industry: "Creative Agency",
-    market: "Europe",
-    methods: [],
-    stack: ["n8n", "OpenAI API", "Airtable", "Webhooks"],
-    project_type: "Automation",
-    work_type: "Freelance",
-    description: "A 24/7 AI agent that qualifies incoming client enquiries, retrieves context from a knowledge base, and routes high-value leads to the calendar — without human input. Reduced missed leads by 80% and saved ~2 hours of manual coordination per day.",
-    situation: "A creative agency was losing inbound leads to slow response times and inconsistent intake. Every enquiry required manual reading, qualifying, and routing — often hours after the initial contact.",
-    approach: "Designed an n8n workflow connecting the intake form to a GPT-4 agent with a RAG knowledge base. The agent classifies lead quality, generates a personalised response, and routes to calendar or CRM based on score.",
-    outcomes: [
-      { value: "80%", label: "reduction in missed leads" },
-      { value: "~2hrs", label: "saved per day on manual routing" },
-      { value: "<2min", label: "avg response time" }
-    ],
-    content: (
-      <div className="w-full h-full border border-white/10 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-105 bg-black/20">
-        <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full bg-primary"></div>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "HP eCommerce Research Programme",
-    category: "UX Research · Strategy",
-    discipline: "UX Research",
-    year: "2022–2024",
-    bg: "bg-surface",
-    company: "HP",
-    industry: "eCommerce",
-    market: "Global",
-    methods: ["Moderated Usability Testing", "Concept Validation", "Diary Studies", "Survey Design", "Competitive Benchmarking"],
-    stack: ["UserTesting", "Dovetail", "Hotjar", "Lookback"],
-    project_type: "Discovery",
-    work_type: "In-house",
-    description: "Led the UX research program for HP's global eCommerce team across 10+ markets. 8+ shipped studies covering financing, customisation, promotions, returns, and post-sale UX — informing product decisions at Fortune 500 scale.",
-    situation: "HP's eCommerce team needed rigorous research to inform product decisions across a complex, multi-market purchase lifecycle. Research needed to scale across 4 product verticals with different PM stakeholders and business questions.",
-    approach: "Built a systematic research cadence across 4 verticals — financing, promotions, customisation, and returns. Mix of moderated usability testing, concept validation, and diary studies. Reported directly to product leadership across Portland, Barcelona, and Singapore.",
-    outcomes: [
-      { value: "8+", label: "shipped research projects" },
-      { value: "10+", label: "markets covered" },
-      { value: "4", label: "product verticals" }
-    ],
-    content: (
-      <div className="w-3/4 aspect-square bg-white rounded-full shadow-md transition-transform duration-500 group-hover:scale-105 flex items-center justify-center border border-cardborder">
-        <div className="w-1/2 aspect-square bg-gray-100 rounded-full"></div>
-      </div>
-    )
-  },
-  {
-    title: "AI In-Car Assistant Research",
-    category: "UX Research · Strategy",
-    discipline: "UX Research",
-    year: "2018–2021",
-    bg: "bg-gradient-to-br from-gray-100 to-gray-200",
-    company: "Renault Group",
-    industry: "Automotive",
-    market: "Europe",
-    methods: ["Car Simulator Studies", "In-context Interviews", "Journey Mapping", "Participatory Design"],
-    stack: ["Miro", "Atlas.ti"],
-    project_type: "Discovery",
-    work_type: "In-house",
-    description: "Led the research programme that defined the interaction model for Renault's next-generation AI in-car companion — combining in-car simulator studies with qualitative research to understand how drivers want to interact with AI without losing trust in safety-critical moments.",
-    situation: "Renault was building an AI in-car assistant ahead of broader vehicle intelligence features. The core design question: how should AI communicate with drivers during different driving contexts without increasing cognitive load or eroding trust?",
-    approach: "Combined qualitative in-context interviews with simulator-based studies in a controlled vehicle environment. Participants experienced different AI communication patterns while physiological and behavioural responses were measured.",
-    outcomes: [
-      { value: "3yrs", label: "research programme duration" },
-      { value: "5+", label: "European markets" },
-      { value: "1", label: "published patent" }
-    ],
-    content: (
-      <div className="w-3/4 h-3/4 bg-white/40 backdrop-blur-md rounded-2xl border border-white/60 shadow-xl transition-transform duration-500 group-hover:scale-105"></div>
-    )
-  }
-];
+const staticProjects = portfolioProjects;
 
 export const Work = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProject, setSelectedProject] = useState<any>(null);
   const [filters, setFilters] = useState<Filter[]>([]);
+
+  const toggleFaq = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = e.currentTarget;
+    const content = btn.nextElementSibling as HTMLElement;
+    const icon = btn.querySelector('.faq-icon') as HTMLElement;
+
+    if (content.style.maxHeight) {
+      content.style.maxHeight = '';
+      icon.style.transform = 'rotate(0deg)';
+    } else {
+      document.querySelectorAll('.faq-content').forEach(c => {
+        (c as HTMLElement).style.maxHeight = '';
+      });
+      document.querySelectorAll('.faq-icon').forEach(i => {
+        (i as HTMLElement).style.transform = 'rotate(0deg)';
+      });
+
+      content.style.maxHeight = content.scrollHeight + "px";
+      icon.style.transform = 'rotate(180deg)';
+    }
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -261,12 +56,9 @@ export const Work = () => {
     fetchProjects();
   }, []);
 
-  if (selectedProject) {
-    return <CaseStudyTemplate project={selectedProject} onBack={() => setSelectedProject(null)} />;
-  }
-
   const displayProjects = projects.length > 0
     ? projects.map(p => ({
+        slug: '',
         title: p.title,
         category: p.category,
         year: p.created_at ? new Date(p.created_at).getFullYear().toString() : '2024',
@@ -276,10 +68,13 @@ export const Work = () => {
         industry: "Tech",
         company: "Client",
         market: "Global",
-        methods: [],
-        stack: [],
+        methods: [] as string[],
+        stack: [] as string[],
         project_type: "Discovery",
         work_type: "Freelance",
+        situation: "",
+        approach: "",
+        outcomes: [] as { value: string; label: string }[],
         content: (
           <img
             src={p.image_url}
@@ -301,7 +96,9 @@ export const Work = () => {
       switch (filter.operator) {
         case 'is': return filterValues.includes(projectValue as string);
         case 'is not': return !filterValues.includes(projectValue as string);
-        case 'is any of': return filterValues.includes(projectValue as string);
+        case 'is any of': return Array.isArray(projectValue)
+          ? filterValues.some(v => (projectValue as string[]).includes(v))
+          : filterValues.some(v => (projectValue as string).toLowerCase().includes(v.toLowerCase()));
         case 'include': return Array.isArray(projectValue) && filterValues.some(v => projectValue.includes(v));
         case 'do not include': return Array.isArray(projectValue) && !filterValues.some(v => projectValue.includes(v));
         case 'include all of': return Array.isArray(projectValue) && filterValues.every(v => projectValue.includes(v));
@@ -321,13 +118,66 @@ export const Work = () => {
         <div className="text-primary text-[11px] font-medium uppercase tracking-label mb-4">Selected Work</div>
         <h2 className="text-5xl md:text-6xl font-heading font-bold text-text tracking-tight mb-6">A few things I've worked on.</h2>
         <p className="text-xl text-grey max-w-2xl mb-12">Nine years across automotive, delivery, and eCommerce. A curated set of projects that show how I approach problems — and what happens after the research is done.</p>
+
+        {/* Impact numbers — sourced from impact-map.md */}
+        <div className="mb-10">
+          <div className="text-primary text-[11px] font-medium uppercase tracking-label mb-5">By the numbers</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {[
+              { value: '+58%',    label: 'Findability',         sub: 'Glovo courier support' },
+              { value: '−23%',    label: 'Escalation rate',     sub: 'Glovo post-launch' },
+              { value: '8+',      label: 'Research projects',   sub: 'HP eCommerce' },
+              { value: '−20%',    label: 'Arousal reduction',   sub: 'PSA physiological' },
+              { value: '85%',     label: 'Relaxation success',  sub: 'PSA in-car study' },
+              { value: '100%',    label: 'Data consistency',    sub: 'V+D automation' },
+              { value: '3h→15m',  label: 'Onboarding time',     sub: 'V+D client intake' },
+              { value: '15',      label: 'Participants',         sub: 'Momentum multi-market' },
+              { value: '4',       label: 'Design directions',   sub: 'Momentum validated' },
+              { value: '3 brands',label: '1 standard',          sub: 'Renault Alliance' },
+            ].map(s => (
+              <div key={s.value + s.sub} className="bg-gray-100 rounded-xl p-5 text-center">
+                <div className="text-xl font-bold text-teal mb-1">{s.value}</div>
+                <div className="text-xs font-semibold text-text mb-0.5">{s.label}</div>
+                <div className="text-[10px] text-grey">{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Domain quick-filters */}
+        <div className="flex flex-wrap gap-3 mb-12">
+          {([
+            { label: 'Automotive',  filterType: FilterType.INDUSTRY,   value: ['Automotive'] },
+            { label: 'Gig Economy', filterType: FilterType.INDUSTRY,   value: ['On-Demand Delivery'] },
+            { label: 'eCommerce',   filterType: FilterType.INDUSTRY,   value: ['eCommerce'] },
+            { label: 'AI / ML',     filterType: FilterType.DISCIPLINE, value: ['AI Automation'] },
+            { label: 'Automation',  filterType: FilterType.DISCIPLINE, value: ['AI Automation'] },
+          ] as const).map(d => (
+            <button key={d.label}
+              onClick={() => setFilters(prev => {
+                // avoid duplicate filter for same type+value
+                const exists = prev.some(f => f.type === d.filterType && f.value.join() === d.value.join());
+                if (exists) return prev;
+                return [...prev, { id: d.label, type: d.filterType, operator: FilterOperator.IS_ANY_OF, value: [...d.value] }];
+              })}
+              className="bg-surface text-grey hover:text-text px-6 py-3 rounded-full font-medium transition-colors text-sm">
+              {d.label}
+            </button>
+          ))}
+          {filters.length > 0 && (
+            <button onClick={() => setFilters([])} className="text-grey hover:text-text px-4 py-3 text-sm font-medium transition-colors underline underline-offset-2">
+              Clear all
+            </button>
+          )}
+        </div>
+
         <WorkFilters filters={filters} setFilters={setFilters} />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
           {filteredProjects.map((project, idx) => (
-            <div key={idx} className="group cursor-pointer flex flex-col" onClick={() => setSelectedProject(project)}>
+            <Link key={idx} to={`/work/${project.slug}`} className="group cursor-pointer flex flex-col">
               <div className={`mb-6 aspect-[4/3] rounded-[32px] overflow-hidden ${project.bg} border border-cardborder shadow-sm transition-transform duration-500 group-hover:scale-[1.02]`}>
                 <div className="w-full h-full flex items-center justify-center p-8 md:p-12 relative">
                   {project.content}
@@ -348,8 +198,50 @@ export const Work = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
+        </div>
+
+        {/* Cross-case synthesis accordion */}
+        <div className="mt-24">
+          <div className="text-primary text-[11px] font-medium uppercase tracking-label mb-4">How I work across projects</div>
+          <h2 className="text-3xl font-heading font-bold text-text mb-8">Five recurring patterns.</h2>
+          <div className="border-t border-cardborder">
+            {[
+              {
+                title: "The Invisible Architecture Problem",
+                body: "Across all projects, the core problem was a mismatch between an existing structure and the mental model or behaviour of the people it's meant to serve.",
+              },
+              {
+                title: "Building Frameworks Where None Existed",
+                body: "I don't just run studies — I build the conceptual infrastructure that makes the research generative. The frameworks outlast the studies.",
+              },
+              {
+                title: "The Counterintuitive Finding",
+                body: "My value is not in confirming hypotheses. It's in designing research rigorous enough to surface the non-obvious finding — and framing it in a way that makes it actionable.",
+              },
+              {
+                title: "Research That Expands Its Own Scope",
+                body: "I frame research in terms of strategic value — not just deliverables. This consistently creates research programmes, not one-off studies.",
+              },
+              {
+                title: "Quantified Validation at Scale",
+                body: "I close the loop between insight and evidence. Qualitative work explains what's wrong; quantitative work proves it's fixed.",
+              },
+            ].map((item, i) => (
+              <div key={i} className="border-b border-cardborder">
+                <button className="faq-btn w-full flex justify-between items-center py-6 text-left" onClick={toggleFaq}>
+                  <span className="font-heading font-semibold text-lg text-text">{item.title}</span>
+                  <svg className="faq-icon w-5 h-5 text-grey flex-shrink-0 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div className="faq-content max-h-0 overflow-hidden transition-all duration-300">
+                  <p className="text-grey leading-relaxed pb-6">{item.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bottom CTA */}

@@ -12,6 +12,7 @@ import { TimelineDemo } from './components/TimelineDemo';
 import { Services } from './components/Services';
 import { Admin } from './components/Admin';
 import { LogoStrip, Challenges, Toolkit, FAQ, Partnerships, CTA } from './components/StaticSections';
+import { CaseStudy } from './pages/CaseStudy';
 import { AnimatedText } from './components/ui/animated-text';
 import { NavBar } from './components/ui/tubelight-navbar';
 
@@ -79,6 +80,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
             <Route path="/work" element={<Work />} />
+            <Route path="/work/:slug" element={<CaseStudy />} />
             <Route path="/process" element={<Process />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/demo" element={<TimelineDemo />} />
