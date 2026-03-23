@@ -56,35 +56,38 @@ export const Work = () => {
     fetchProjects();
   }, []);
 
-  const displayProjects = projects.length > 0
-    ? projects.map(p => ({
-        slug: '',
-        title: p.title,
-        category: p.category,
-        year: p.created_at ? new Date(p.created_at).getFullYear().toString() : '2024',
-        bg: "bg-surface",
-        description: p.description || "A comprehensive case study detailing the problem, approach, and solution.",
-        discipline: "UX Research",
-        industry: "Tech",
-        company: "Client",
-        market: "Global",
-        methods: [] as string[],
-        stack: [] as string[],
-        project_type: "Discovery",
-        work_type: "Freelance",
-        situation: "",
-        approach: "",
-        outcomes: [] as { value: string; label: string }[],
-        content: (
-          <img
-            src={p.image_url}
-            alt={p.title}
-            className="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105"
-            referrerPolicy="no-referrer"
-          />
-        )
-      }))
-    : staticProjects;
+  // Always use static projects as the base; add any Supabase projects that have valid slugs on top
+  const supabaseExtras = projects
+    .filter(p => p.slug && !staticProjects.find(sp => sp.slug === p.slug))
+    .map(p => ({
+      slug: p.slug ?? '',
+      title: p.title,
+      category: p.category ?? 'UX Research',
+      year: p.created_at ? new Date(p.created_at).getFullYear().toString() : '2024',
+      bg: 'bg-surface',
+      description: p.description || '',
+      discipline: 'UX Research',
+      industry: 'Tech',
+      company: 'Client',
+      market: 'Global',
+      methods: [] as string[],
+      stack: [] as string[],
+      project_type: 'Discovery',
+      work_type: 'freelance',
+      situation: '',
+      approach: '',
+      outcomes: [] as { value: string; label: string }[],
+      content: (
+        <img
+          src={p.image_url}
+          alt={p.title}
+          className="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105"
+          referrerPolicy="no-referrer"
+        />
+      ),
+    }));
+
+  const displayProjects = [...staticProjects, ...supabaseExtras];
 
   const filteredProjects = displayProjects.filter((project) => {
     if (filters.length === 0) return true;
@@ -94,8 +97,22 @@ export const Work = () => {
       if (projectValue === undefined) return false;
       const filterValues = filter.value;
       switch (filter.operator) {
-        case 'is': return filterValues.includes(projectValue as string);
-        case 'is not': return !filterValues.includes(projectValue as string);
+        case 'is': {
+          if (Array.isArray(projectValue)) {
+            return filterValues.some(v => (projectValue as string[]).includes(v));
+          }
+          return filterValues.some(v =>
+            (projectValue as string).toLowerCase().includes(v.toLowerCase())
+          );
+        }
+        case 'is not': {
+          if (Array.isArray(projectValue)) {
+            return !filterValues.some(v => (projectValue as string[]).includes(v));
+          }
+          return !filterValues.some(v =>
+            (projectValue as string).toLowerCase().includes(v.toLowerCase())
+          );
+        }
         case 'is any of': return Array.isArray(projectValue)
           ? filterValues.some(v => (projectValue as string[]).includes(v))
           : filterValues.some(v => (projectValue as string).toLowerCase().includes(v.toLowerCase()));
@@ -152,18 +169,29 @@ export const Work = () => {
             { label: 'eCommerce',   filterType: FilterType.INDUSTRY,   value: ['eCommerce'] },
             { label: 'AI / ML',     filterType: FilterType.DISCIPLINE, value: ['AI Automation'] },
             { label: 'Automation',  filterType: FilterType.DISCIPLINE, value: ['AI Automation'] },
-          ] as const).map(d => (
-            <button key={d.label}
-              onClick={() => setFilters(prev => {
-                // avoid duplicate filter for same type+value
-                const exists = prev.some(f => f.type === d.filterType && f.value.join() === d.value.join());
-                if (exists) return prev;
-                return [...prev, { id: d.label, type: d.filterType, operator: FilterOperator.IS_ANY_OF, value: [...d.value] }];
-              })}
-              className="bg-surface text-grey hover:text-text px-6 py-3 rounded-full font-medium transition-colors text-sm">
-              {d.label}
-            </button>
-          ))}
+          ] as const).map(d => {
+            const isActive = filters.some(f => f.type === d.filterType && f.value.join() === d.value.join());
+            return (
+              <button key={d.label}
+                onClick={() => setFilters(prev => {
+                  if (isActive) {
+                    // Toggle off: remove this filter
+                    return prev.filter(f => !(f.type === d.filterType && f.value.join() === d.value.join()));
+                  }
+                  // Toggle on: add (avoid duplicate)
+                  const exists = prev.some(f => f.type === d.filterType && f.value.join() === d.value.join());
+                  if (exists) return prev;
+                  return [...prev, { id: d.label, type: d.filterType, operator: FilterOperator.IS_ANY_OF, value: [...d.value] }];
+                })}
+                className={`px-6 py-3 rounded-full font-medium transition-colors text-sm border ${
+                  isActive
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-surface text-grey hover:text-text border-transparent'
+                }`}>
+                {d.label}
+              </button>
+            );
+          })}
           {filters.length > 0 && (
             <button onClick={() => setFilters([])} className="text-grey hover:text-text px-4 py-3 text-sm font-medium transition-colors underline underline-offset-2">
               Clear all
