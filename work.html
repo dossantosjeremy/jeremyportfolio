@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work — Jérémy Dos Santos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A6BFF',
+            background: '#FFFFFF',
+            text: '#1A1A1A',
+            grey: '#555555',
+            teal: '#0AB5A0',
+            surface: '#F0F2F6',
+            navy: '#0F1F2E',
+            cardborder: '#E4E6EB',
+          },
+          fontFamily: {
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            card: '10px',
+            btn: '6px',
+          },
+          letterSpacing: {
+            label: '0.08em',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1A1A1A;
+      background-color: #FFFFFF;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+    }
+    .label-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+  <!-- SECTION: Navigation -->
+  <nav class="w-full py-6 px-8 flex justify-between items-center max-w-7xl mx-auto">
+    <a href="/" class="font-heading text-xl tracking-tight hover:text-primary transition-colors">Jérémy Dos Santos</a>
+    <div class="hidden md:flex gap-8 items-center">
+      <a href="/process.html" class="text-grey hover:text-primary transition-colors font-medium">Process</a>
+      <a href="/work.html" class="text-primary font-semibold transition-colors">Work</a>
+      <a href="/services.html" class="text-grey hover:text-primary transition-colors font-medium">Services</a>
+      <a href="/about.html" class="text-grey hover:text-primary transition-colors font-medium">About</a>
+      <a href="#contact" class="bg-primary text-white px-5 py-2.5 rounded-btn font-medium hover:bg-blue-700 transition-colors">Let's Talk</a>
+    </div>
+  </nav>
+
+  <!-- SECTION: HERO -->
+  <section class="pt-[80px] pb-24 px-8 text-center max-w-3xl mx-auto">
+    <div class="text-primary text-[11px] font-medium uppercase tracking-label mb-4">Selected Work</div>
+    <h1 class="text-5xl md:text-6xl font-heading font-bold text-text mb-6 tracking-tight">Case Studies & Projects.</h1>
+    <p class="text-lg md:text-xl text-grey leading-relaxed mb-10">
+      A selection of recent projects spanning UX research, product design, and AI automation.
+    </p>
+  </section>
+
+  <!-- SECTION: PROJECTS -->
+  <section class="max-w-7xl mx-auto px-8 pb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      
+      <!-- Project 1 -->
+      <a href="/glovo.html" class="group block">
+        <div class="bg-surface rounded-card aspect-video mb-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gray-200 group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+            <svg class="w-12 h-12 text-grey/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
+          </div>
+        </div>
+        <div class="flex gap-3 mb-3">
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">UX Research</span>
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">Glovo</span>
+        </div>
+        <h3 class="font-heading font-bold text-2xl mb-2 text-text group-hover:text-primary transition-colors">Courier Support App Redesign</h3>
+        <p class="text-grey leading-relaxed">Restructured the IA based on courier mental models, reducing escalation rates by 23%.</p>
+      </a>
+
+      <!-- Project 2 -->
+      <a href="#" class="group block">
+        <div class="bg-surface rounded-card aspect-video mb-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gray-200 group-hover:scale-105 transition-transform duration-500"></div>
+        </div>
+        <div class="flex gap-3 mb-3">
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">AI Automation</span>
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">Operations</span>
+        </div>
+        <h3 class="font-heading font-bold text-2xl mb-2 text-text group-hover:text-primary transition-colors">Automated Support Triage</h3>
+        <p class="text-grey leading-relaxed">Building an LLM-powered system to automatically categorize and route incoming support tickets.</p>
+      </a>
+
+      <!-- Project 3 -->
+      <a href="#" class="group block">
+        <div class="bg-surface rounded-card aspect-video mb-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gray-200 group-hover:scale-105 transition-transform duration-500"></div>
+        </div>
+        <div class="flex gap-3 mb-3">
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">UX Research</span>
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">SaaS</span>
+        </div>
+        <h3 class="font-heading font-bold text-2xl mb-2 text-text group-hover:text-primary transition-colors">Enterprise Dashboard Discovery</h3>
+        <p class="text-grey leading-relaxed">A 4-week research sprint to uncover the real needs of power users in a complex B2B tool.</p>
+      </a>
+
+      <!-- Project 4 -->
+      <a href="#" class="group block">
+        <div class="bg-surface rounded-card aspect-video mb-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gray-200 group-hover:scale-105 transition-transform duration-500"></div>
+        </div>
+        <div class="flex gap-3 mb-3">
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">Product Design</span>
+          <span class="text-xs font-medium px-2.5 py-1 bg-surface text-grey rounded-full">HealthTech</span>
+        </div>
+        <h3 class="font-heading font-bold text-2xl mb-2 text-text group-hover:text-primary transition-colors">Patient Portal Mobile App</h3>
+        <p class="text-grey leading-relaxed">Designing an accessible, compliant mobile experience for patients to manage their care.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SECTION: CTA -->
+  <section class="bg-primary text-white py-24 px-8 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-10">Have a project in mind?</h2>
+      <a href="mailto:jeremyguillaumedossantos@gmail.com" class="inline-block bg-white text-primary px-10 py-4 rounded-btn font-bold text-lg hover:bg-gray-50 transition-colors shadow-sm">
+        Let's Talk
+      </a>
+    </div>
+  </section>
+
+  <!-- SECTION: FOOTER -->
+  <footer class="bg-navy text-white py-12">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-gray-400">
+        <div>&copy; <span id="year"></span> Jérémy Dos Santos. All rights reserved.</div>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+          <a href="#" class="hover:text-white transition-colors">Twitter</a>
+          <a href="#" class="hover:text-white transition-colors">Dribbble</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

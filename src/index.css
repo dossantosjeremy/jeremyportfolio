@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --color-primary: #0066cc;
+  --color-background: #ffffff;
+  --color-text: #1d1d1f;
+  --color-grey: #86868b;
+  --color-teal: #0066cc;
+  --color-surface: #f5f5f7;
+  --color-navy: #1d1d1f;
+  --color-cardborder: #d2d2d7;
+  --radius-card: 24px;
+  --radius-btn: 9999px;
+  --letter-spacing-label: 0.05em;
+
+  --animate-aurora: aurora 60s linear infinite;
+}
+
+@keyframes aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
+@layer base {
+  body {
+    @apply font-body text-text bg-background antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .label-text {
+    @apply font-medium text-[11px] uppercase tracking-[0.08em];
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes text-slide {
+  0%, 26.66% { transform: translateY(0%); }
+  33.33%, 60% { transform: translateY(-25%); }
+  66.66%, 93.33% { transform: translateY(-50%); }
+  100% { transform: translateY(-75%); }
+}
+
+.animate-text-slide {
+  animation: text-slide 7.5s cubic-bezier(0.83, 0, 0.17, 1) infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Card Hover Glow Effects */
+.rounded-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.rounded-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 14px 30px -6px rgba(26, 107, 255, 0.15) !important;
+  border-color: rgba(26, 107, 255, 0.3) !important;
+}
+
+#work-carousel .group .rounded-\[32px\] {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+#work-carousel .group:hover .rounded-\[32px\] {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 20px 40px -8px rgba(26, 107, 255, 0.25) !important;
+  border-color: rgba(26, 107, 255, 0.3) !important;
+}

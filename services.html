@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services — Jérémy Dos Santos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A6BFF',
+            background: '#FFFFFF',
+            text: '#1A1A1A',
+            grey: '#555555',
+            teal: '#0AB5A0',
+            surface: '#F0F2F6',
+            navy: '#0F1F2E',
+            cardborder: '#E4E6EB',
+          },
+          fontFamily: {
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            card: '10px',
+            btn: '6px',
+          },
+          letterSpacing: {
+            label: '0.08em',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1A1A1A;
+      background-color: #FFFFFF;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+    }
+    .label-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- SECTION: Navigation -->
+  <nav class="w-full py-6 px-8 flex justify-between items-center max-w-7xl mx-auto">
+    <a href="/" class="font-heading text-xl tracking-tight hover:text-primary transition-colors">Jérémy Dos Santos</a>
+    <div class="hidden md:flex gap-8 items-center">
+      <a href="/process.html" class="text-grey hover:text-primary transition-colors font-medium">Process</a>
+      <a href="/work.html" class="text-grey hover:text-primary transition-colors font-medium">Work</a>
+      <a href="/services.html" class="text-primary font-semibold transition-colors">Services</a>
+      <a href="/about.html" class="text-grey hover:text-primary transition-colors font-medium">About</a>
+      <a href="#contact" class="bg-primary text-white px-5 py-2.5 rounded-btn font-medium hover:bg-blue-700 transition-colors">Let's Talk</a>
+    </div>
+  </nav>
+
+  <!-- SECTION: HERO -->
+  <section class="pt-[80px] pb-24 px-8 text-center max-w-3xl mx-auto">
+    <div class="text-primary text-[11px] font-medium uppercase tracking-label mb-4">Services</div>
+    <h1 class="text-5xl md:text-6xl font-heading font-bold text-text mb-6 tracking-tight">Three disciplines. One consultant.</h1>
+    <p class="text-lg md:text-xl text-grey leading-relaxed">
+      From a single research sprint to a full automation build — scoped to your stage, delivered without handoff chaos.
+    </p>
+  </section>
+
+  <!-- SECTION: SERVICE CARDS -->
+  <section class="max-w-7xl mx-auto px-8 pb-24">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Card 1: AI Automation -->
+      <div class="bg-surface rounded-card p-8 border-l-4 border-[#1A6BFF] hover:bg-white hover:border-gray-200 hover:border-l-[#1A6BFF] hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col">
+        <div class="inline-flex px-3 py-1 rounded-full text-[11px] font-medium text-white bg-[#1A6BFF] mb-6 self-start">AI Automation</div>
+        <h3 class="font-heading font-bold text-2xl mb-4 text-text">AI Automation & Workflow Engineering</h3>
+        <p class="text-grey mb-8 flex-1 leading-relaxed">Custom pipelines, AI agents, and workflow systems that reduce manual work and scale with your team. Built with n8n, Make.com, Python, and APIs.</p>
+        <div class="text-sm font-medium text-text mb-8 leading-relaxed opacity-80">
+          n8n · Make.com · OpenAI API · Anthropic API · Airtable · Webhooks
+        </div>
+        <a href="#" class="text-[#1A6BFF] font-medium hover:underline inline-flex items-center gap-1">Explore this service &rarr;</a>
+      </div>
+
+      <!-- Card 2: UX Research -->
+      <div class="bg-surface rounded-card p-8 border-l-4 border-[#0AB5A0] hover:bg-white hover:border-gray-200 hover:border-l-[#0AB5A0] hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col">
+        <div class="inline-flex px-3 py-1 rounded-full text-[11px] font-medium text-white bg-[#0AB5A0] mb-6 self-start">UX Research</div>
+        <h3 class="font-heading font-bold text-2xl mb-4 text-text">UX Research & Discovery</h3>
+        <p class="text-grey mb-8 flex-1 leading-relaxed">Research that gets used, not filed away. Interviews, usability testing, synthesis — matched to your question and budget. Available in 4 languages.</p>
+        <div class="text-sm font-medium text-text mb-8 leading-relaxed opacity-80">
+          Dovetail · Lookback · Maze · Hotjar · Miro
+        </div>
+        <a href="#" class="text-[#0AB5A0] font-medium hover:underline inline-flex items-center gap-1">Explore this service &rarr;</a>
+      </div>
+
+      <!-- Card 3: UX Design -->
+      <div class="bg-surface rounded-card p-8 border-l-4 border-[#0F1F2E] hover:bg-white hover:border-gray-200 hover:border-l-[#0F1F2E] hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col">
+        <div class="inline-flex px-3 py-1 rounded-full text-[11px] font-medium text-white bg-[#0F1F2E] mb-6 self-start">UX Design</div>
+        <h3 class="font-heading font-bold text-2xl mb-4 text-text">UX & Product Design</h3>
+        <p class="text-grey mb-8 flex-1 leading-relaxed">From research insight to design artefact — no translation layer. Audits, wireframes, prototypes, and design systems ready for handover.</p>
+        <div class="text-sm font-medium text-text mb-8 leading-relaxed opacity-80">
+          Figma · FigJam · Protopie · Framer · Zeroheight
+        </div>
+        <a href="#" class="text-[#0F1F2E] font-medium hover:underline inline-flex items-center gap-1">Explore this service &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: ENGAGEMENT TIERS -->
+  <section class="bg-navy text-white py-24 px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <div class="text-teal text-[11px] font-medium uppercase tracking-label mb-4">How We Engage</div>
+        <h2 class="text-4xl md:text-5xl font-heading font-bold">Pick the model that fits your stage.</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Tier A -->
+        <div class="bg-white text-text rounded-card p-8 border-t-[6px] border-[#1A6BFF] relative flex flex-col">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-teal text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-sm">Most Popular</div>
+          <h3 class="font-heading font-bold text-xl mb-4 mt-2">Exploration Milestone</h3>
+          <div class="text-[32px] font-heading font-bold text-[#1A6BFF] mb-1">€800–€2,000</div>
+          <div class="text-grey text-sm font-medium mb-6">1–2 weeks</div>
+          <p class="text-grey mb-8 flex-1">Perfect for initial discovery, audits, or small proof-of-concept automations to validate direction.</p>
+          
+          <ul class="space-y-3 mb-8 text-sm font-medium">
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Weekly updates</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Full asset handover</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Documentation</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 14-day support</li>
+          </ul>
+          <button class="w-full bg-[#1A6BFF] text-white py-3.5 rounded-btn font-medium hover:bg-blue-700 transition-colors">Start Here</button>
+        </div>
+
+        <!-- Tier B -->
+        <div class="bg-white text-text rounded-card p-8 border-t-[6px] border-[#0AB5A0] flex flex-col mt-4 md:mt-0">
+          <h3 class="font-heading font-bold text-xl mb-4 mt-2">Fixed-Scope Project</h3>
+          <div class="text-[32px] font-heading font-bold text-text mb-1">Custom quote</div>
+          <div class="text-grey text-sm font-medium mb-6">2–12 weeks</div>
+          <p class="text-grey mb-8 flex-1">Ideal for full product redesigns, comprehensive research studies, or end-to-end automation builds.</p>
+          
+          <ul class="space-y-3 mb-8 text-sm font-medium">
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Weekly updates</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Full asset handover</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Documentation</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 14-day support</li>
+          </ul>
+          <button class="w-full bg-[#0AB5A0] text-white py-3.5 rounded-btn font-medium hover:bg-teal-600 transition-colors">Get a Quote</button>
+        </div>
+
+        <!-- Tier C -->
+        <div class="bg-white text-text rounded-card p-8 border-t-[6px] border-[#0F1F2E] flex flex-col mt-4 md:mt-0">
+          <h3 class="font-heading font-bold text-xl mb-4 mt-2">Monthly Retainer</h3>
+          <div class="text-[32px] font-heading font-bold text-text mb-1">€750–€3,000<span class="text-lg text-grey font-normal">/mo</span></div>
+          <div class="text-grey text-sm font-medium mb-6">Rolling, cancel anytime</div>
+          <p class="text-grey mb-8 flex-1">Ongoing strategic support, continuous research, and iterative automation improvements for growing teams.</p>
+          
+          <ul class="space-y-3 mb-8 text-sm font-medium">
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Weekly updates</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Full asset handover</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Documentation</li>
+            <li class="flex items-start gap-3"><svg class="w-5 h-5 text-teal shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 14-day support</li>
+          </ul>
+          <button class="w-full bg-[#0F1F2E] text-white py-3.5 rounded-btn font-medium hover:bg-gray-800 transition-colors">Book a Call</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: TESTIMONIALS -->
+  <section class="bg-surface py-24 px-8">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-16 text-center text-text">What clients say.</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Quote 1 -->
+        <div class="bg-white p-8 rounded-card shadow-sm border border-gray-100">
+          <div class="text-primary mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.017 21L16.41 14.596H10.855V3H21.5V14.596L19.106 21H14.017ZM3.162 21L5.555 14.596H0V3H10.645V14.596L8.251 21H3.162Z"/>
+            </svg>
+          </div>
+          <p class="text-lg text-text mb-8 leading-relaxed">"Jérémy completely transformed how we handle courier support. The automation system saved us countless hours and the research insights were immediately actionable."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div>
+              <div class="font-bold text-text">Operations Lead</div>
+              <div class="text-sm text-grey">Glovo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quote 2 -->
+        <div class="bg-white p-8 rounded-card shadow-sm border border-gray-100">
+          <div class="text-primary mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.017 21L16.41 14.596H10.855V3H21.5V14.596L19.106 21H14.017ZM3.162 21L5.555 14.596H0V3H10.645V14.596L8.251 21H3.162Z"/>
+            </svg>
+          </div>
+          <p class="text-lg text-text mb-8 leading-relaxed">"The research insights were incredibly clear and immediately actionable. He didn't just hand over a report; he gave us a roadmap. Best investment we made this year."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div>
+              <div class="font-bold text-text">Product Manager</div>
+              <div class="text-sm text-grey">HP</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: FAQ -->
+  <section class="py-24 px-8 bg-white">
+    <div class="max-w-[720px] mx-auto">
+      <h2 class="text-3xl md:text-4xl font-heading font-bold mb-12 text-center text-text">Frequently Asked Questions</h2>
+      
+      <div class="space-y-4">
+        <details class="group bg-surface rounded-card p-6 cursor-pointer border border-transparent hover:border-gray-200 transition-colors">
+          <summary class="font-bold text-lg flex justify-between items-center text-text">
+            Not sure which service?
+            <span class="text-primary group-open:rotate-180 transition-transform duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </span>
+          </summary>
+          <p class="text-grey mt-4 leading-relaxed">Book a free discovery call and we'll discuss your current bottlenecks to find the best approach. There's no pressure to commit.</p>
+        </details>
+
+        <details class="group bg-surface rounded-card p-6 cursor-pointer border border-transparent hover:border-gray-200 transition-colors">
+          <summary class="font-bold text-lg flex justify-between items-center text-text">
+            Work outside Spain?
+            <span class="text-primary group-open:rotate-180 transition-transform duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </span>
+          </summary>
+          <p class="text-grey mt-4 leading-relaxed">Yes, I work remotely with clients across Europe and globally. I'm fluent in 4 languages and comfortable working across different time zones.</p>
+        </details>
+
+        <details class="group bg-surface rounded-card p-6 cursor-pointer border border-transparent hover:border-gray-200 transition-colors">
+          <summary class="font-bold text-lg flex justify-between items-center text-text">
+            Combine services?
+            <span class="text-primary group-open:rotate-180 transition-transform duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </span>
+          </summary>
+          <p class="text-grey mt-4 leading-relaxed">Absolutely. Many projects start with UX Research to uncover the real problem, and seamlessly transition into UX Design or AI Automation to solve it.</p>
+        </details>
+
+        <details class="group bg-surface rounded-card p-6 cursor-pointer border border-transparent hover:border-gray-200 transition-colors">
+          <summary class="font-bold text-lg flex justify-between items-center text-text">
+            How quickly can you start?
+            <span class="text-primary group-open:rotate-180 transition-transform duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </span>
+          </summary>
+          <p class="text-grey mt-4 leading-relaxed">Typically within 1-2 weeks, depending on my current project load. Reach out early if you have a strict deadline.</p>
+        </details>
+
+        <details class="group bg-surface rounded-card p-6 cursor-pointer border border-transparent hover:border-gray-200 transition-colors">
+          <summary class="font-bold text-lg flex justify-between items-center text-text">
+            Do you sign NDAs?
+            <span class="text-primary group-open:rotate-180 transition-transform duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </span>
+          </summary>
+          <p class="text-grey mt-4 leading-relaxed">Yes, standard NDAs are signed before we discuss any sensitive project details or proprietary systems.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: CTA -->
+  <section class="bg-primary text-white py-24 px-8 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-10">Not sure where to start?</h2>
+      <a href="mailto:jeremyguillaumedossantos@gmail.com" class="inline-block bg-white text-primary px-10 py-4 rounded-btn font-bold text-lg hover:bg-gray-50 transition-colors shadow-sm">
+        Book a Free Call
+      </a>
+    </div>
+  </section>
+
+  <!-- SECTION: FOOTER -->
+  <footer class="bg-navy text-white py-12">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-gray-400">
+        <div>&copy; <span id="year"></span> Jérémy Dos Santos. All rights reserved.</div>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+          <a href="#" class="hover:text-white transition-colors">Twitter</a>
+          <a href="#" class="hover:text-white transition-colors">Dribbble</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

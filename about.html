@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Jérémy Dos Santos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A6BFF',
+            background: '#FFFFFF',
+            text: '#1A1A1A',
+            grey: '#555555',
+            teal: '#0AB5A0',
+            surface: '#F0F2F6',
+            navy: '#0F1F2E',
+            cardborder: '#E4E6EB',
+          },
+          fontFamily: {
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            card: '10px',
+            btn: '6px',
+          },
+          letterSpacing: {
+            label: '0.08em',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1A1A1A;
+      background-color: #FFFFFF;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+    }
+    .timeline-entry {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .timeline-entry.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- SECTION: Navigation -->
+  <nav class="w-full py-6 px-8 flex justify-between items-center max-w-7xl mx-auto">
+    <a href="/" class="font-heading text-xl tracking-tight hover:text-primary transition-colors">Jérémy Dos Santos</a>
+    <div class="hidden md:flex gap-8 items-center">
+      <a href="/process.html" class="text-grey hover:text-primary transition-colors font-medium">Process</a>
+      <a href="/work.html" class="text-grey hover:text-primary transition-colors font-medium">Work</a>
+      <a href="/services.html" class="text-grey hover:text-primary transition-colors font-medium">Services</a>
+      <a href="/about.html" class="text-primary font-semibold transition-colors">About</a>
+      <a href="mailto:jeremyguillaumedossantos@gmail.com" class="bg-primary text-white px-5 py-2.5 rounded-btn font-medium hover:bg-blue-700 transition-colors">Let's Talk</a>
+    </div>
+  </nav>
+
+  <!-- SECTION: HERO -->
+  <section class="pt-16 pb-24 px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col lg:flex-row gap-16 items-center">
+      <!-- Left Column (55%) -->
+      <div class="lg:w-[55%]">
+        <div class="text-teal text-[11px] font-medium uppercase tracking-label mb-4">About</div>
+        <h1 class="text-5xl md:text-6xl font-heading font-bold text-text mb-6 tracking-tight leading-[1.1]">
+          I'm Jérémy. I research, design, and automate.
+        </h1>
+        <p class="text-lg text-grey leading-relaxed mb-8">
+          My background is in Neuroscience — which gave me a methodological foundation and a deep curiosity about human behaviour. Over the years I've worked across automotive, delivery, and eCommerce. Today I help product teams understand their users and automate their operations.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <span class="inline-flex items-center px-3 py-1.5 bg-surface text-text text-sm font-medium rounded-full">
+            📍 Madrid, Spain
+          </span>
+          <span class="inline-flex items-center px-3 py-1.5 bg-surface text-text text-sm font-medium rounded-full">
+            🌍 4 languages
+          </span>
+          <span class="inline-flex items-center gap-2 px-3 py-1.5 bg-surface text-text text-sm font-medium rounded-full">
+            <span class="w-2 h-2 rounded-full bg-teal"></span>
+            ✅ Available
+          </span>
+        </div>
+      </div>
+      
+      <!-- Right Column (40%) -->
+      <div class="lg:w-[40%] flex flex-col gap-6">
+        <div class="bg-surface rounded-card aspect-[3/4] w-full flex items-center justify-center relative overflow-hidden">
+          <svg class="w-24 h-24 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-surface rounded-card p-6 text-center">
+            <div class="text-primary font-heading font-bold text-2xl mb-1">6+ years</div>
+            <div class="text-sm text-grey font-medium">Consulting</div>
+          </div>
+          <div class="bg-surface rounded-card p-6 text-center">
+            <div class="text-primary font-heading font-bold text-2xl mb-1">40+ projects</div>
+            <div class="text-sm text-grey font-medium">5 industries</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: CAREER TIMELINE -->
+  <section class="bg-surface py-24 px-8">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-grey text-[11px] font-medium uppercase tracking-label mb-4">Experience</div>
+      <h2 class="text-4xl md:text-5xl font-heading font-bold text-text mb-16">Where I've worked.</h2>
+      
+      <div class="relative border-l-2 border-cardborder pl-8 ml-3 space-y-12" id="timeline-container">
+        <!-- Entry 1 -->
+        <div class="timeline-entry relative">
+          <div class="absolute -left-[41px] top-1.5 w-4 h-4 bg-primary rounded-full border-4 border-surface"></div>
+          <div class="text-sm text-grey font-medium mb-1">2022–Present</div>
+          <h3 class="text-xl font-bold text-text mb-2 flex items-center flex-wrap gap-3">
+            HP eCommerce 
+            <span class="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide">Lead UX Researcher</span>
+          </h3>
+          <p class="text-grey leading-relaxed">8+ research projects shipped</p>
+        </div>
+
+        <!-- Entry 2 -->
+        <div class="timeline-entry relative">
+          <div class="absolute -left-[41px] top-1.5 w-4 h-4 bg-primary rounded-full border-4 border-surface"></div>
+          <div class="text-sm text-grey font-medium mb-1">2022–Present</div>
+          <h3 class="text-xl font-bold text-text mb-2 flex items-center flex-wrap gap-3">
+            ADPList & MentorCruise
+            <span class="bg-teal/10 text-teal px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide">Mentor</span>
+          </h3>
+          <p class="text-grey leading-relaxed">UX research and career mentoring</p>
+        </div>
+
+        <!-- Entry 3 -->
+        <div class="timeline-entry relative">
+          <div class="absolute -left-[41px] top-1.5 w-4 h-4 bg-primary rounded-full border-4 border-surface"></div>
+          <div class="text-sm text-grey font-medium mb-1">2021–2022</div>
+          <h3 class="text-xl font-bold text-text mb-2 flex items-center flex-wrap gap-3">
+            Glovo
+            <span class="bg-gray-200 text-grey px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide">UX Researcher</span>
+          </h3>
+          <p class="text-grey leading-relaxed">courier experience: support, earnings, unhappy path</p>
+        </div>
+
+        <!-- Entry 4 -->
+        <div class="timeline-entry relative">
+          <div class="absolute -left-[41px] top-1.5 w-4 h-4 bg-primary rounded-full border-4 border-surface"></div>
+          <div class="text-sm text-grey font-medium mb-1">2018–2021</div>
+          <h3 class="text-xl font-bold text-text mb-2 flex items-center flex-wrap gap-3">
+            Renault Group
+            <span class="bg-gray-200 text-grey px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide">Lead UX Researcher</span>
+          </h3>
+          <p class="text-grey leading-relaxed">AI in-car companion, qualitative + car simulator</p>
+        </div>
+
+        <!-- Entry 5 -->
+        <div class="timeline-entry relative">
+          <div class="absolute -left-[41px] top-1.5 w-4 h-4 bg-primary rounded-full border-4 border-surface"></div>
+          <div class="text-sm text-grey font-medium mb-1">2016–2018</div>
+          <h3 class="text-xl font-bold text-text mb-2 flex items-center flex-wrap gap-3">
+            PSA Peugeot Citroën
+            <span class="bg-gray-200 text-grey px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide">Human Factors Researcher</span>
+          </h3>
+          <p class="text-grey leading-relaxed">driver stress, physiological + qualitative</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: APPROACH -->
+  <section class="py-24 px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col lg:flex-row gap-16">
+      <div class="lg:w-1/2">
+        <div class="text-teal text-[11px] font-medium uppercase tracking-label mb-4">My Approach</div>
+        <h2 class="text-4xl md:text-5xl font-heading font-bold text-text mb-6">Research-first. Then build.</h2>
+        <p class="text-lg text-grey leading-relaxed">
+          I'm drawn to the intersection of behavioural insight and technical implementation. I have an intrapreneurial mindset — I take ownership, move fast, and bring people with me.
+        </p>
+      </div>
+      <div class="lg:w-1/2 flex flex-col gap-4">
+        <div class="bg-surface rounded-card p-6 font-bold text-lg text-text">Research-grounded</div>
+        <div class="bg-surface rounded-card p-6 font-bold text-lg text-text">Technically fluent</div>
+        <div class="bg-surface rounded-card p-6 font-bold text-lg text-text">Async-first</div>
+        <div class="bg-surface rounded-card p-6 font-bold text-lg text-text">Honest</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: LANGUAGES STRIP -->
+  <section class="bg-navy text-white py-16 px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 justify-between items-start md:items-center">
+      <div>
+        <div class="text-gray-400 text-sm font-medium mb-4 uppercase tracking-label">Languages</div>
+        <div class="flex flex-wrap gap-3">
+          <span class="bg-white/10 px-4 py-2 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">🇫🇷 French Native</span>
+          <span class="bg-white/10 px-4 py-2 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">🇬🇧 English Professional</span>
+          <span class="bg-white/10 px-4 py-2 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">🇪🇸 Spanish Fluent</span>
+          <span class="bg-white/10 px-4 py-2 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">🇵🇹 Portuguese Conversational</span>
+        </div>
+      </div>
+      <div>
+        <div class="text-gray-400 text-sm font-medium mb-4 uppercase tracking-label">Education</div>
+        <div class="flex flex-col gap-2">
+          <div class="font-medium">MSc Cognitive Neuroscience</div>
+          <div class="font-medium text-gray-300">BSc Psychology</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: MENTORING -->
+  <section class="bg-surface py-24 px-8 text-center">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold text-text mb-6">I also mentor.</h2>
+      <p class="text-lg text-grey leading-relaxed mb-10">
+        I mentor aspiring UX researchers and designers on ADPList and MentorCruise — portfolio reviews, research craft, career transitions.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#" class="bg-primary text-white px-6 py-3 rounded-btn font-medium hover:bg-blue-700 transition-colors shadow-sm">Find me on ADPList</a>
+        <a href="#" class="bg-transparent border-2 border-cardborder text-text px-6 py-3 rounded-btn font-medium hover:border-gray-300 transition-colors">Find me on MentorCruise</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: TESTIMONIALS -->
+  <section class="bg-white py-24 px-8">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-16 text-center text-text">What colleagues say.</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Quote 1 -->
+        <div class="bg-surface p-8 rounded-card shadow-sm">
+          <div class="text-primary mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.017 21L16.41 14.596H10.855V3H21.5V14.596L19.106 21H14.017ZM3.162 21L5.555 14.596H0V3H10.645V14.596L8.251 21H3.162Z"/>
+            </svg>
+          </div>
+          <p class="text-lg text-text mb-8 leading-relaxed">"Jérémy completely transformed how we handle courier support. The automation system saved us countless hours and the research insights were immediately actionable."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div>
+              <div class="font-bold text-text">Operations Lead</div>
+              <div class="text-sm text-grey">Glovo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quote 2 -->
+        <div class="bg-surface p-8 rounded-card shadow-sm">
+          <div class="text-primary mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.017 21L16.41 14.596H10.855V3H21.5V14.596L19.106 21H14.017ZM3.162 21L5.555 14.596H0V3H10.645V14.596L8.251 21H3.162Z"/>
+            </svg>
+          </div>
+          <p class="text-lg text-text mb-8 leading-relaxed">"The research insights were incredibly clear and immediately actionable. He didn't just hand over a report; he gave us a roadmap. Best investment we made this year."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div>
+              <div class="font-bold text-text">Product Manager</div>
+              <div class="text-sm text-grey">Glovo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quote 3 -->
+        <div class="bg-surface p-8 rounded-card shadow-sm">
+          <div class="text-primary mb-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.017 21L16.41 14.596H10.855V3H21.5V14.596L19.106 21H14.017ZM3.162 21L5.555 14.596H0V3H10.645V14.596L8.251 21H3.162Z"/>
+            </svg>
+          </div>
+          <p class="text-lg text-text mb-8 leading-relaxed">"Jérémy brings a rare combination of deep empathy for the user and a highly structured, analytical mind. He elevated our entire product team's approach to research."</p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div>
+              <div class="font-bold text-text">Design Lead</div>
+              <div class="text-sm text-grey">Glovo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: CTA -->
+  <section class="bg-primary text-white py-24 px-8 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-10">Want to work together?</h2>
+      <a href="mailto:jeremyguillaumedossantos@gmail.com" class="inline-block bg-white text-primary px-10 py-4 rounded-btn font-bold text-lg hover:bg-gray-50 transition-colors shadow-sm">
+        Book a Discovery Call
+      </a>
+    </div>
+  </section>
+
+  <!-- SECTION: FOOTER -->
+  <footer class="bg-white border-t border-cardborder py-12">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-grey">
+        <div>&copy; <span id="year"></span> Jérémy Dos Santos. All rights reserved.</div>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-primary transition-colors">LinkedIn</a>
+          <a href="#" class="hover:text-primary transition-colors">Twitter</a>
+          <a href="#" class="hover:text-primary transition-colors">Dribbble</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Timeline stagger animation
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          const timelineEntries = document.querySelectorAll('.timeline-entry');
+          timelineEntries.forEach((entry, index) => {
+            setTimeout(() => {
+              entry.classList.add('visible');
+            }, index * 80); // 80ms stagger
+          });
+          observer.disconnect();
+        }
+      }, { threshold: 0.1 });
+
+      const container = document.getElementById('timeline-container');
+      if (container) {
+        observer.observe(container);
+      }
+    });
+  </script>
+</body>
+</html>

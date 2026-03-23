@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glovo Courier Support App Redesign — Jérémy Dos Santos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1A6BFF',
+            background: '#FFFFFF',
+            text: '#1A1A1A',
+            grey: '#555555',
+            teal: '#0AB5A0',
+            surface: '#F0F2F6',
+            navy: '#0F1F2E',
+            cardborder: '#E4E6EB',
+          },
+          fontFamily: {
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            card: '10px',
+            btn: '6px',
+          },
+          letterSpacing: {
+            label: '0.08em',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1A1A1A;
+      background-color: #FFFFFF;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+    }
+    .overline-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #0AB5A0;
+    }
+    .narrative-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      color: #555555;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <!-- SECTION: Navigation -->
+  <nav class="w-full py-6 px-8 flex justify-between items-center max-w-7xl mx-auto">
+    <a href="/" class="font-heading text-xl tracking-tight hover:text-primary transition-colors">Jérémy Dos Santos</a>
+    <div class="hidden md:flex gap-8 items-center">
+      <a href="/process.html" class="text-grey hover:text-primary transition-colors font-medium">Process</a>
+      <a href="/work.html" class="text-primary transition-colors font-medium">Work</a>
+      <a href="/services.html" class="text-grey hover:text-primary transition-colors font-medium">Services</a>
+      <a href="/about.html" class="text-grey hover:text-primary transition-colors font-medium">About</a>
+      <a href="mailto:jeremyguillaumedossantos@gmail.com" class="bg-primary text-white px-5 py-2.5 rounded-btn font-medium hover:bg-blue-700 transition-colors">Let's Talk</a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-12 pb-24 px-8 max-w-[1100px] mx-auto">
+    
+    <!-- HERO -->
+    <header class="mb-16">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="text-sm text-grey font-medium">
+          <a href="/work.html" class="hover:text-primary transition-colors">Work</a>
+          <span class="mx-2">→</span>
+          <span class="text-text">Glovo</span>
+        </div>
+        <span class="bg-surface text-primary px-3 py-1 rounded-full text-xs font-bold tracking-label uppercase">UX Research</span>
+      </div>
+      
+      <h1 class="text-[52px] leading-[1.1] font-heading font-bold text-text mb-6">
+        Courier Support App Redesign
+      </h1>
+      
+      <p class="text-xl text-grey leading-relaxed max-w-3xl mb-12">
+        Couriers needed to resolve issues through an app — but the IA didn't match their mental models. I redesigned it using moderated interviews and card sorting.
+      </p>
+
+      <!-- 16:9 Thumbnail Placeholder -->
+      <div class="w-full aspect-video bg-surface rounded-card flex items-center justify-center overflow-hidden">
+        <svg class="w-16 h-16 text-cardborder" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
+      </div>
+    </header>
+
+    <!-- TWO COLUMN LAYOUT -->
+    <div class="flex flex-col md:flex-row justify-between items-start gap-12 relative">
+      
+      <!-- LEFT COLUMN: NARRATIVE (68%) -->
+      <article class="w-full md:w-[68%] flex flex-col gap-16">
+        
+        <!-- Section 1 -->
+        <section>
+          <div class="overline-text mb-3">The Situation</div>
+          <h2 class="text-[28px] font-heading font-bold text-text mb-4">Couriers were losing trust in the support system.</h2>
+          <p class="narrative-body">
+            Glovo's courier support app was the primary channel for resolving delivery issues. Couriers were abandoning mid-flow or escalating to phone support. The hypothesis: IA didn't match how couriers categorised their problems.
+          </p>
+        </section>
+
+        <!-- Section 2 -->
+        <section>
+          <div class="overline-text mb-3">What I Did</div>
+          <h2 class="text-[28px] font-heading font-bold text-text mb-4">Research first. Redesign after.</h2>
+          <p class="narrative-body mb-6">
+            8 moderated interviews in Spain and Portugal. Open + closed card sorting with 40 couriers via Maze.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-surface text-grey px-4 py-2 rounded-full text-sm font-medium">Moderated Interviews</span>
+            <span class="bg-surface text-grey px-4 py-2 rounded-full text-sm font-medium">Open Card Sorting</span>
+            <span class="bg-surface text-grey px-4 py-2 rounded-full text-sm font-medium">Closed Card Sorting</span>
+            <span class="bg-surface text-grey px-4 py-2 rounded-full text-sm font-medium">Thematic Analysis</span>
+          </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section>
+          <div class="overline-text mb-3">What We Found</div>
+          <h2 class="text-[28px] font-heading font-bold text-text mb-6">Three mental models, not one.</h2>
+          <div class="flex flex-col gap-4">
+            <div class="bg-surface p-6 rounded-r-card border-l-4 border-primary text-grey text-lg">
+              <strong class="text-text">1.</strong> Couriers group issues by urgency, not category type.
+            </div>
+            <div class="bg-surface p-6 rounded-r-card border-l-4 border-primary text-grey text-lg">
+              <strong class="text-text">2.</strong> "Earnings" was always the first mental entry point.
+            </div>
+            <div class="bg-surface p-6 rounded-r-card border-l-4 border-primary text-grey text-lg">
+              <strong class="text-text">3.</strong> Safety concerns had no clear entry point.
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section>
+          <div class="overline-text mb-3">The Impact</div>
+          <h2 class="text-[28px] font-heading font-bold text-text mb-6">A restructured IA that reflects how couriers think.</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-surface p-6 rounded-card text-center flex flex-col justify-center">
+              <div class="font-heading font-bold text-[36px] text-primary mb-1">
+                <span class="metric-number" data-target="23">0</span>%
+              </div>
+              <div class="text-sm text-grey font-medium leading-tight">drop in escalation rate</div>
+            </div>
+            <div class="bg-surface p-6 rounded-card text-center flex flex-col justify-center">
+              <div class="font-heading font-bold text-[36px] text-primary mb-1">
+                <span class="metric-number" data-target="8">0</span>
+              </div>
+              <div class="text-sm text-grey font-medium leading-tight">weeks research to launch</div>
+            </div>
+            <div class="bg-surface p-6 rounded-card text-center flex flex-col justify-center">
+              <div class="font-heading font-bold text-[36px] text-primary mb-1">
+                <span class="metric-number" data-target="40">0</span>+
+              </div>
+              <div class="text-sm text-grey font-medium leading-tight">couriers in study</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5 -->
+        <section>
+          <div class="overline-text mb-3">Reflection</div>
+          <h2 class="text-[28px] font-heading font-bold text-text mb-4">Mental models beat category logic every time.</h2>
+          <p class="narrative-body">
+            The original IA was built around Glovo's internal taxonomy. Card sorting data convinced resistant stakeholders.
+          </p>
+        </section>
+
+        <!-- Section 6: IMAGE GALLERY -->
+        <section>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <figure class="group">
+              <div class="aspect-[4/3] bg-surface rounded-card overflow-hidden mb-3">
+                <div class="w-full h-full bg-cardborder/50 group-hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-grey/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
+                </div>
+              </div>
+              <figcaption class="text-[13px] text-grey italic">Card sorting dendrogram analysis</figcaption>
+            </figure>
+            <figure class="group">
+              <div class="aspect-[4/3] bg-surface rounded-card overflow-hidden mb-3">
+                <div class="w-full h-full bg-cardborder/50 group-hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-grey/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
+                </div>
+              </div>
+              <figcaption class="text-[13px] text-grey italic">Final IA structure mapping</figcaption>
+            </figure>
+          </div>
+        </section>
+
+      </article>
+
+      <!-- RIGHT COLUMN: SIDEBAR (28%) -->
+      <aside class="w-full md:w-[28%] sticky top-[88px]">
+        <div class="bg-white border border-cardborder rounded-card p-6 shadow-sm">
+          <div class="flex flex-col gap-5">
+            <div>
+              <div class="text-[11px] font-bold text-grey uppercase tracking-label mb-1">Client</div>
+              <div class="text-text font-medium">Glovo</div>
+            </div>
+            <hr class="border-cardborder">
+            <div>
+              <div class="text-[11px] font-bold text-grey uppercase tracking-label mb-1">Role</div>
+              <div class="text-text font-medium">Lead UX Researcher</div>
+            </div>
+            <hr class="border-cardborder">
+            <div>
+              <div class="text-[11px] font-bold text-grey uppercase tracking-label mb-1">Timeline</div>
+              <div class="text-text font-medium">8 weeks</div>
+            </div>
+            <hr class="border-cardborder">
+            <div>
+              <div class="text-[11px] font-bold text-grey uppercase tracking-label mb-1">Methods</div>
+              <div class="text-text font-medium leading-relaxed">Moderated interviews<br>Card sorting<br>IA redesign</div>
+            </div>
+            <hr class="border-cardborder">
+            <div>
+              <div class="text-[11px] font-bold text-grey uppercase tracking-label mb-1">Tools</div>
+              <div class="text-text font-medium leading-relaxed">Figma · Miro · Zoom</div>
+            </div>
+            <hr class="border-cardborder">
+            <div>
+              <div class="text-[11px] font-bold text-grey uppercase tracking-label mb-1">Deliverable</div>
+              <div class="text-text font-medium leading-relaxed">Restructured IA + validated prototype</div>
+            </div>
+            
+            <a href="mailto:jeremyguillaumedossantos@gmail.com" class="mt-4 block w-full bg-primary text-white text-center py-3 rounded-btn font-medium hover:bg-blue-700 transition-colors">
+              Book a similar project &rarr;
+            </a>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- NAVIGATION (NEXT PROJECT) -->
+  <section class="bg-surface py-20 px-8 text-center border-t border-cardborder">
+    <div class="max-w-3xl mx-auto flex flex-col items-center">
+      <div class="overline-text mb-4">Next Project</div>
+      <h3 class="text-3xl md:text-4xl font-heading font-bold text-text mb-8">HP — Financing Discovery Research</h3>
+      <a href="#" class="inline-flex items-center gap-2 text-primary font-bold hover:text-blue-700 transition-colors text-lg">
+        View Case Study &rarr;
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-primary text-white py-24 px-8 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-heading font-bold mb-10">Interested in similar research?</h2>
+      <a href="mailto:jeremyguillaumedossantos@gmail.com" class="inline-block bg-white text-primary px-10 py-4 rounded-btn font-bold text-lg hover:bg-gray-100 transition-colors shadow-sm">
+        Book a Discovery Call
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-white py-12">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-grey">
+        <div>&copy; <span id="year"></span> Jérémy Dos Santos. All rights reserved.</div>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-primary transition-colors">LinkedIn</a>
+          <a href="#" class="hover:text-primary transition-colors">Twitter</a>
+          <a href="#" class="hover:text-primary transition-colors">Dribbble</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Intersection Observer for counting up metrics
+    document.addEventListener("DOMContentLoaded", () => {
+      const metrics = document.querySelectorAll('.metric-number');
+      
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const targetElement = entry.target;
+            const targetValue = parseInt(targetElement.getAttribute('data-target'), 10);
+            let startValue = 0;
+            const duration = 1500; // 1.5 seconds
+            const frameRate = 1000 / 60; // 60 fps
+            const totalFrames = Math.round(duration / frameRate);
+            const increment = targetValue / totalFrames;
+            
+            const counter = setInterval(() => {
+              startValue += increment;
+              if (startValue >= targetValue) {
+                targetElement.textContent = targetValue;
+                clearInterval(counter);
+              } else {
+                targetElement.textContent = Math.ceil(startValue);
+              }
+            }, frameRate);
+            
+            // Stop observing once animation triggers
+            observer.unobserve(targetElement);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      metrics.forEach(metric => {
+        observer.observe(metric);
+      });
+    });
+  </script>
+</body>
+</html>
