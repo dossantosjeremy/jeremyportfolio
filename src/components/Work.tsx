@@ -758,7 +758,7 @@ export const Work = ({ homepage }: { homepage?: boolean } = {}) => {
               >
                 {cards.map(project => (
                   <Link key={project.slug} to={`/work/${project.slug}`}
-                    className="group flex-shrink-0 w-72 flex flex-col rounded-2xl border-2 border-gray-200 overflow-hidden hover:border-primary/40 hover:shadow-lg transition-all bg-white"
+                    className="group flex-shrink-0 w-72 flex flex-col rounded-2xl border-2 border-cardborder overflow-hidden hover:border-primary/40 hover:shadow-lg transition-all bg-white"
                     style={{ scrollSnapAlign: 'start' }}>
                     <div className={`h-36 relative bg-gradient-to-br ${getGradient(project.company)} overflow-hidden`}>
                       {getCoverSrc(project.slug, COVER_IMAGES[project.slug]) && (
