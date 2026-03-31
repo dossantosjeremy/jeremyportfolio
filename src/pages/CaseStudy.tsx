@@ -168,16 +168,16 @@ function renderInline(text: string): React.ReactNode {
 
 // ── Block types ─────────────────────────────────────────────────────────────
 type MdBlock =
-  | { type: 'h1'; text: string }
-  | { type: 'h2'; text: string }
-  | { type: 'h3'; text: string }
-  | { type: 'p'; text: string }
-  | { type: 'blockquote'; lines: string[] }
-  | { type: 'table'; rows: string[][] }
-  | { type: 'ul'; items: string[] }
-  | { type: 'ol'; items: string[] }
-  | { type: 'hr' }
-  | { type: 'img'; src: string; caption: string };
+  | { type: 'h1'; text: string; raw: string }
+  | { type: 'h2'; text: string; raw: string }
+  | { type: 'h3'; text: string; raw: string }
+  | { type: 'p'; text: string; raw: string }
+  | { type: 'blockquote'; lines: string[]; raw: string }
+  | { type: 'table'; rows: string[][]; raw: string }
+  | { type: 'ul'; items: string[]; raw: string }
+  | { type: 'ol'; items: string[]; raw: string }
+  | { type: 'hr'; raw: string }
+  | { type: 'img'; src: string; caption: string; raw: string };
 
 // ── Markdown → blocks ───────────────────────────────────────────────────────
 function parseMd(raw: string, slug = ''): MdBlock[] {
@@ -195,19 +195,19 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
 
     // HR
     if (/^-{3,}$/.test(first) && lines.length === 1) {
-      blocks.push({ type: 'hr' });
+      blocks.push({ type: 'hr', raw: chunk });
       continue;
     }
 
     // H2 before H1 check (## before #)
     if (first.startsWith('## ') && !first.startsWith('### ')) {
-      blocks.push({ type: 'h2', text: first.slice(3) });
+      blocks.push({ type: 'h2', text: first.slice(3), raw: chunk });
       continue;
     }
 
     // H3
     if (first.startsWith('### ')) {
-      blocks.push({ type: 'h3', text: first.slice(4) });
+      blocks.push({ type: 'h3', text: first.slice(4), raw: chunk });
       continue;
     }
 
@@ -225,7 +225,7 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
         if (cells.every(c => /^[-: ]+$/.test(c))) continue; // separator row
         rows.push(cells);
       }
-      if (rows.length > 0) blocks.push({ type: 'table', rows });
+      if (rows.length > 0) blocks.push({ type: 'table', rows, raw: chunk });
       continue;
     }
 
@@ -234,7 +234,7 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
       const bqLines = lines
         .filter(l => l.startsWith('>'))
         .map(l => l.replace(/^> ?/, ''));
-      blocks.push({ type: 'blockquote', lines: bqLines });
+      blocks.push({ type: 'blockquote', lines: bqLines, raw: chunk });
       continue;
     }
 
@@ -243,7 +243,7 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
       const items = lines
         .filter(l => l.match(/^[-*•] /))
         .map(l => l.replace(/^[-*•] /, ''));
-      if (items.length > 0) blocks.push({ type: 'ul', items });
+      if (items.length > 0) blocks.push({ type: 'ul', items, raw: chunk });
       continue;
     }
 
@@ -252,7 +252,7 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
       const items = lines
         .filter(l => l.match(/^\d+\. /))
         .map(l => l.replace(/^\d+\. /, ''));
-      if (items.length > 0) blocks.push({ type: 'ol', items });
+      if (items.length > 0) blocks.push({ type: 'ol', items, raw: chunk });
       continue;
     }
 
@@ -265,7 +265,7 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
         const src = rawPath.startsWith('images/')
           ? `/case-studies/${slug}/${rawPath.slice(7)}`
           : rawPath;
-        blocks.push({ type: 'img', src, caption });
+        blocks.push({ type: 'img', src, caption, raw: chunk });
       }
       // Emit any non-image, non-italic-caption text in the same chunk
       const remainingLines = lines.filter(l => {
@@ -274,7 +274,7 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
       });
       if (remainingLines.length > 0) {
         const text = remainingLines.join(' ').trim();
-        if (text) blocks.push({ type: 'p', text });
+        if (text) blocks.push({ type: 'p', text, raw: chunk });
       }
       continue;
     }
@@ -284,17 +284,90 @@ function parseMd(raw: string, slug = ''): MdBlock[] {
     if (filteredLines.length === 0) continue;
 
     const text = filteredLines.join(' ').trim();
-    if (text) blocks.push({ type: 'p', text });
+    if (text) blocks.push({ type: 'p', text, raw: chunk });
   }
 
   return blocks;
 }
 
+// ── Replace one block's raw text in the full markdown ───────────────────────
+function replaceBlockInMd(fullMd: string, oldRaw: string, newRaw: string): string {
+  const fmMatch = fullMd.match(/^---\n[\s\S]*?\n---\n?/);
+  const fm = fmMatch ? fmMatch[0] : '';
+  const body = fullMd.slice(fm.length);
+  const updated = body.includes(oldRaw) ? body.replace(oldRaw, newRaw) : body;
+  return fm + updated;
+}
+
+// ── Inline edit wrapper ──────────────────────────────────────────────────────
+type InlineEditOpts = {
+  isEditing: boolean;
+  editingIdx: number | null;
+  inlineDraft: string;
+  onBlockClick: (idx: number, block: MdBlock) => void;
+  onDraftChange: (v: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
+  onImgReplace: (idx: number) => void;
+};
+
 // ── Blocks → JSX ────────────────────────────────────────────────────────────
-function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: string }[]): React.ReactNode {
+function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: string }[], editOpts?: InlineEditOpts): React.ReactNode {
   const elements: React.ReactNode[] = [];
   let h2Count = 0;
   let secondaryImagesInjected = false;
+
+  const { isEditing, editingIdx, inlineDraft, onBlockClick, onDraftChange, onSave, onCancel, onImgReplace } = editOpts ?? {};
+
+  // Wrap a block node with inline-edit hover + click behaviour
+  const wrapEditable = (key: string, blockIdx: number, block: MdBlock, node: React.ReactNode) => {
+    if (!isEditing) return <React.Fragment key={key}>{node}</React.Fragment>;
+    if (editingIdx === blockIdx) {
+      return (
+        <div key={key} className="relative">
+          <textarea
+            autoFocus
+            className="w-full border-2 border-primary rounded-card p-4 font-mono text-sm leading-relaxed resize-none outline-none min-h-[100px] bg-white"
+            value={inlineDraft}
+            onChange={e => onDraftChange?.(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); onSave?.(); }
+              if (e.key === 'Escape') { onCancel?.(); }
+            }}
+            rows={Math.max(3, (inlineDraft ?? '').split('\n').length + 1)}
+          />
+          <div className="flex gap-2 mt-2">
+            <button onClick={onSave} className="bg-primary text-white px-4 py-1.5 rounded-btn text-sm font-medium hover:bg-primary/90 transition-colors">Save</button>
+            <button onClick={onCancel} className="text-grey px-4 py-1.5 text-sm hover:text-text transition-colors">Cancel</button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div
+        key={key}
+        className="group relative cursor-text rounded-lg hover:ring-2 hover:ring-primary/25 hover:ring-offset-1 transition-all"
+        onClick={() => onBlockClick?.(blockIdx, block)}
+        title="Click to edit"
+      >
+        {node}
+        <span className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 w-6 h-6 bg-primary text-white rounded-full text-[11px] flex items-center justify-center transition-opacity shadow-sm pointer-events-none select-none">✎</span>
+      </div>
+    );
+  };
+
+  // Wrap an image block with replace overlay
+  const wrapImgEditable = (key: string, blockIdx: number, node: React.ReactNode) => {
+    if (!isEditing) return <React.Fragment key={key}>{node}</React.Fragment>;
+    return (
+      <div key={key} className="group relative cursor-pointer" onClick={() => onImgReplace?.(blockIdx)}>
+        {node}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/25 transition-all rounded-card">
+          <span className="opacity-0 group-hover:opacity-100 bg-white text-text font-medium text-sm px-4 py-2 rounded-btn shadow transition-opacity">📷 Replace image</span>
+        </div>
+      </div>
+    );
+  };
 
   // If the markdown already contains inline images, skip the auto-gallery injection
   // so images appear exactly where the user placed them in the markdown.
@@ -326,8 +399,8 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
             </div>
           );
         }
-        elements.push(
-          <div key={`h2-${i}`} className="pt-16 first:pt-0">
+        elements.push(wrapEditable(`h2-${i}`, i, b,
+          <div className="pt-16 first:pt-0">
             <div className="text-teal text-[10px] font-bold uppercase tracking-widest mb-3">
               {String(h2Count).padStart(2, '0')}
             </div>
@@ -335,29 +408,29 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
               {b.text}
             </h2>
           </div>
-        );
+        ));
         break;
       }
 
       case 'h3':
-        elements.push(
-          <h3 key={`h3-${i}`} className="text-lg font-heading font-bold text-text mt-10 mb-4">
+        elements.push(wrapEditable(`h3-${i}`, i, b,
+          <h3 className="text-lg font-heading font-bold text-text mt-10 mb-4">
             {renderInline(b.text)}
           </h3>
-        );
+        ));
         break;
 
       case 'p':
-        elements.push(
-          <p key={`p-${i}`} className="text-grey leading-relaxed">
+        elements.push(wrapEditable(`p-${i}`, i, b,
+          <p className="text-grey leading-relaxed">
             {renderInline(b.text)}
           </p>
-        );
+        ));
         break;
 
       case 'blockquote':
-        elements.push(
-          <blockquote key={`bq-${i}`} className="border-l-4 border-teal pl-6 py-1 my-6 bg-surface rounded-r-lg">
+        elements.push(wrapEditable(`bq-${i}`, i, b,
+          <blockquote className="border-l-4 border-teal pl-6 py-1 my-6 bg-surface rounded-r-lg">
             {b.lines.map((line, li) => (
               line.trim() ? (
                 <p key={li} className="text-grey italic leading-relaxed">
@@ -366,13 +439,13 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
               ) : null
             ))}
           </blockquote>
-        );
+        ));
         break;
 
       case 'table': {
         const [headerRow, ...bodyRows] = b.rows;
-        elements.push(
-          <div key={`table-${i}`} className="overflow-x-auto my-8">
+        elements.push(wrapEditable(`table-${i}`, i, b,
+          <div className="overflow-x-auto my-8">
             <table className="w-full text-sm border-collapse">
               {headerRow && (
                 <thead>
@@ -398,13 +471,13 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
               </tbody>
             </table>
           </div>
-        );
+        ));
         break;
       }
 
       case 'ul':
-        elements.push(
-          <ul key={`ul-${i}`} className="space-y-2 my-4 ml-1">
+        elements.push(wrapEditable(`ul-${i}`, i, b,
+          <ul className="space-y-2 my-4 ml-1">
             {b.items.map((item, ii) => (
               <li key={ii} className="flex gap-3 text-grey leading-relaxed">
                 <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-teal flex-shrink-0" />
@@ -412,12 +485,12 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
               </li>
             ))}
           </ul>
-        );
+        ));
         break;
 
       case 'ol':
-        elements.push(
-          <ol key={`ol-${i}`} className="space-y-3 my-4">
+        elements.push(wrapEditable(`ol-${i}`, i, b,
+          <ol className="space-y-3 my-4">
             {b.items.map((item, ii) => (
               <li key={ii} className="flex gap-3 text-grey leading-relaxed">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
@@ -427,12 +500,12 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
               </li>
             ))}
           </ol>
-        );
+        ));
         break;
 
       case 'img':
-        elements.push(
-          <figure key={`img-${i}`} className="my-10">
+        elements.push(wrapImgEditable(`img-${i}`, i,
+          <figure className="my-10">
             <img
               src={b.src}
               alt={b.caption}
@@ -444,7 +517,7 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
               </figcaption>
             )}
           </figure>
-        );
+        ));
         break;
     }
   }
@@ -577,6 +650,59 @@ export const CaseStudy = () => {
     return json.url as string;
   };
 
+  // ── Inline editing state ──────────────────────────────────────────────────
+  const [inlineEdit, setInlineEdit] = React.useState<{ blockIdx: number; draft: string; oldRaw: string } | null>(null);
+  const [heroImgReplace, setHeroImgReplace] = React.useState(false);
+  const [inlineImgBlockIdx, setInlineImgBlockIdx] = React.useState<number | null>(null);
+  const inlineImgInputRef = React.useRef<HTMLInputElement>(null);
+  const heroImgInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleInlineSave = () => {
+    if (!inlineEdit) return;
+    const newMd = replaceBlockInMd(currentMd, inlineEdit.oldRaw, inlineEdit.draft);
+    localStorage.setItem(EDIT_PREFIX + EDIT_KEY, newMd);
+    setCurrentMd(newMd);
+    setEditorDraft(newMd);
+    setInlineEdit(null);
+  };
+
+  const handleInlineImgUpload = async (file: File, blockIdx: number | null) => {
+    setUploading('inline-img');
+    try {
+      const url = await uploadFile(file);
+      if (blockIdx === null) {
+        // Hero image replace
+        const updated = [...images];
+        updated[0] = { ...updated[0], src: url };
+        setImages(updated);
+        setEditImages(updated);
+        localStorage.setItem(EDIT_PREFIX + IMAGES_KEY, JSON.stringify(updated));
+        localStorage.setItem(EDIT_PREFIX + `cover:${slug}`, url);
+      } else {
+        // Inline markdown image block replace — update the raw markdown
+        const b = parseMd(currentMd, slug!)[blockIdx];
+        if (b?.type === 'img') {
+          const newRaw = `![${b.caption}](${url})`;
+          const newMd = replaceBlockInMd(currentMd, b.raw, newRaw);
+          localStorage.setItem(EDIT_PREFIX + EDIT_KEY, newMd);
+          setCurrentMd(newMd);
+          setEditorDraft(newMd);
+        }
+      }
+    } catch (err: any) { alert('Upload failed: ' + err.message); }
+    setUploading(null);
+    setInlineImgBlockIdx(null);
+    setHeroImgReplace(false);
+  };
+
+  // Trigger hero image file picker
+  React.useEffect(() => {
+    if (heroImgReplace) {
+      heroImgInputRef.current?.click();
+      setHeroImgReplace(false);
+    }
+  }, [heroImgReplace]);
+
   const { isEditing } = useEditMode();
   React.useEffect(() => {
     if (isEditing) {
@@ -666,7 +792,9 @@ export const CaseStudy = () => {
 
         {/* Hero image */}
         {images.length > 0 ? (
-          <div className="w-full mb-20">
+          <div className={`group w-full mb-20 relative ${isEditing ? 'cursor-pointer' : ''}`}
+            onClick={() => isEditing && setHeroImgReplace(true)}
+          >
             <img
               src={images[0].src}
               alt={images[0].caption}
@@ -675,14 +803,53 @@ export const CaseStudy = () => {
             {images[0].caption && (
               <p className="text-xs text-grey mt-3 text-center">{images[0].caption}</p>
             )}
+            {isEditing && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/25 transition-all rounded-2xl">
+                <span className="opacity-0 group-hover:opacity-100 bg-white text-text font-medium text-sm px-4 py-2 rounded-btn shadow transition-opacity">📷 Replace cover image</span>
+              </div>
+            )}
           </div>
         ) : (
-          <div className={`w-full aspect-[21/9] rounded-2xl mb-20 flex items-center justify-center ${project.bg || 'bg-surface'}`}>
+          <div
+            className={`group w-full aspect-[21/9] rounded-2xl mb-20 flex items-center justify-center relative ${project.bg || 'bg-surface'} ${isEditing ? 'cursor-pointer' : ''}`}
+            onClick={() => isEditing && setHeroImgReplace(true)}
+          >
             <div className="w-24 h-24 rounded-full bg-white/30 flex items-center justify-center">
               <span className="text-5xl font-bold text-white/70">{project.company[0]}</span>
             </div>
+            {isEditing && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-all rounded-2xl">
+                <span className="opacity-0 group-hover:opacity-100 bg-white text-text font-medium text-sm px-4 py-2 rounded-btn shadow transition-opacity">📷 Add cover image</span>
+              </div>
+            )}
           </div>
         )}
+
+        {/* Hidden file inputs for inline image replacement */}
+        <input
+          ref={heroImgInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={e => {
+            const file = e.target.files?.[0];
+            if (file) handleInlineImgUpload(file, null);
+            e.target.value = '';
+          }}
+        />
+        <input
+          ref={inlineImgInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={e => {
+            const file = e.target.files?.[0];
+            if (file) handleInlineImgUpload(file, inlineImgBlockIdx);
+            e.target.value = '';
+          }}
+        />
+
+        {/* Trigger hero img file picker (via effect) */}
 
         {/* Two-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
@@ -690,7 +857,19 @@ export const CaseStudy = () => {
           {/* Left: full markdown content */}
           <div className="lg:col-span-8">
             {hasContent ? (
-              renderBlocks(blocks, images)
+              renderBlocks(blocks, images, {
+                isEditing,
+                editingIdx: inlineEdit?.blockIdx ?? null,
+                inlineDraft: inlineEdit?.draft ?? '',
+                onBlockClick: (idx, block) => setInlineEdit({ blockIdx: idx, draft: block.raw, oldRaw: block.raw }),
+                onDraftChange: v => setInlineEdit(prev => prev ? { ...prev, draft: v } : null),
+                onSave: handleInlineSave,
+                onCancel: () => setInlineEdit(null),
+                onImgReplace: idx => {
+                  setInlineImgBlockIdx(idx);
+                  setTimeout(() => inlineImgInputRef.current?.click(), 0);
+                },
+              })
             ) : (
               <div className="space-y-6">
                 <div className="pt-16">
