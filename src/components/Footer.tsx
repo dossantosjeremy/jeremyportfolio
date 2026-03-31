@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Linkedin, Twitter, Github } from 'lucide-react';
+import { E } from './ui/E';
 
 export const Footer = () => (
   <footer className="bg-navy text-white pt-32 pb-12 overflow-hidden relative">
@@ -11,9 +12,9 @@ export const Footer = () => (
     <div className="max-w-7xl mx-auto px-8 relative z-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-24 mb-32">
         <div>
-          <div className="text-primary text-[11px] font-medium uppercase tracking-label mb-6">Contact</div>
+          <div className="text-primary text-[11px] font-medium uppercase tracking-label mb-6"><E k="footer.contact.label">Contact</E></div>
           <h2 className="text-5xl md:text-7xl font-heading font-bold mb-12 leading-tight tracking-tight">
-            Let's build something <span className="text-teal italic">exceptional.</span>
+            <E k="footer.contact.heading">Let's build something exceptional.</E>
           </h2>
           <div className="flex flex-col gap-8">
             <a href="mailto:hello@jeremy.design" className="text-2xl md:text-3xl font-heading font-bold hover:text-primary transition-colors flex items-center gap-4 group">
@@ -56,7 +57,7 @@ export const Footer = () => (
       <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-white/40 text-sm font-medium">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-teal animate-pulse"></div>
-          Available for new projects in Q2 2024
+          <E k="footer.availability">Available for new projects in Q2 2024</E>
         </div>
         <div className="flex gap-8">
           <span>&copy; 2024 Jeremy Guillaume</span>

@@ -45,18 +45,8 @@ export function WorkFilters({
   const commandInputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <div className="flex gap-2 flex-wrap items-center mb-8">
+    <div className="flex gap-2 flex-wrap items-center">
       <Filters filters={filters} setFilters={setFilters} />
-      {filters.filter((filter) => filter.value?.length > 0).length > 0 && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="transition group h-8 text-xs items-center rounded-full text-gray-500 hover:text-gray-900"
-          onClick={() => setFilters([])}
-        >
-          Clear
-        </Button>
-      )}
       <Popover
         open={open}
         onOpenChange={(open) => {

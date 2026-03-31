@@ -43,21 +43,21 @@ export const WhyWorkWithMe = () => (
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
       <GlowCard>
-        <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 text-primary">
+        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
           <Layers className="w-6 h-6" />
         </div>
         <h3 className="font-heading font-bold text-xl mb-3 text-text">Three disciplines. One person.</h3>
         <p className="text-grey leading-relaxed text-sm">Traditional agencies lose context at every handoff. You brief the researcher, who briefs the designer, who briefs the developer. I own the full arc — from first user interview to deployed automation — so nothing falls through the cracks.</p>
       </GlowCard>
       <GlowCard>
-        <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 text-primary">
+        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
           <User className="w-6 h-6" />
         </div>
         <h3 className="font-heading font-bold text-xl mb-3 text-text">Direct Access</h3>
         <p className="text-grey leading-relaxed text-sm">You speak to me, not an account manager. That means faster feedback loops, more honest conversations, and work that reflects what you actually need — not a repackaged template.</p>
       </GlowCard>
       <GlowCard>
-        <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 text-primary">
+        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
           <BarChart3 className="w-6 h-6" />
         </div>
         <h3 className="font-heading font-bold text-xl mb-3 text-text">Measured Outcomes</h3>
@@ -81,21 +81,21 @@ export const Expertise = () => (
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
       <GlowCard>
-        <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6 text-primary">
+        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-6 text-primary">
           <Zap className="w-6 h-6" />
         </div>
         <h3 className="font-heading font-bold text-xl mb-3 text-text">AI & Automation</h3>
         <p className="text-grey leading-relaxed text-sm">Custom workflows and AI agents built in n8n, Make.com, and Python that replace the manual work eating your team's week. Triggers, routing, synthesis — automated.</p>
       </GlowCard>
       <GlowCard>
-        <div className="w-12 h-12 bg-teal/10 rounded-lg flex items-center justify-center mb-6 text-teal">
+        <div className="w-12 h-12 bg-teal/10 rounded-full flex items-center justify-center mb-6 text-teal">
           <Search className="w-6 h-6" />
         </div>
         <h3 className="font-heading font-bold text-xl mb-3 text-text">UX Research</h3>
         <p className="text-grey leading-relaxed text-sm">Qual and quant research designed around the actual decision you need to make — not a standard study template. From screener to synthesis to stakeholder readout.</p>
       </GlowCard>
       <GlowCard>
-        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-6 text-grey">
+        <div className="w-12 h-12 bg-surface rounded-full flex items-center justify-center mb-6 text-grey">
           <Layout className="w-6 h-6" />
         </div>
         <h3 className="font-heading font-bold text-xl mb-3 text-text">Product Design</h3>

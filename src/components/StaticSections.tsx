@@ -9,16 +9,16 @@ export const LogoStrip = () => {
         </div>
         <div className="relative w-full overflow-hidden flex [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
           <div className="animate-marquee flex items-center gap-4 px-2" style={{ animationDuration: '20s' }}>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-gray-400 font-bold">HP</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-gray-400 font-bold">Glovo</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-40 shrink-0 flex items-center justify-center shadow-sm"><span className="text-gray-400 font-bold">Renault Group</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-gray-400 font-bold">Stellantis</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-gray-400 font-bold">Oracle</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-gray-400 font-bold">HP</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-gray-400 font-bold">Glovo</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-40 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-gray-400 font-bold">Renault Group</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-gray-400 font-bold">Stellantis</span></div>
-            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-gray-400 font-bold">Oracle</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-grey font-bold">HP</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-grey font-bold">Glovo</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-40 shrink-0 flex items-center justify-center shadow-sm"><span className="text-grey font-bold">Renault Group</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-grey font-bold">Stellantis</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm"><span className="text-grey font-bold">Oracle</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-grey font-bold">HP</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-grey font-bold">Glovo</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-40 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-grey font-bold">Renault Group</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-grey font-bold">Stellantis</span></div>
+            <div className="bg-white border border-cardborder rounded-card h-14 w-32 shrink-0 flex items-center justify-center shadow-sm" aria-hidden="true"><span className="text-grey font-bold">Oracle</span></div>
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@ export const Challenges = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white border border-cardborder rounded-card p-8 shadow-sm flex flex-col">
-            <div className="w-10 h-10 bg-teal/10 rounded-lg flex items-center justify-center mb-6 text-teal">
+            <div className="w-10 h-10 bg-teal/10 rounded-full flex items-center justify-center mb-6 text-teal">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             </div>
             <h3 className="font-heading font-bold text-xl mb-6 text-text">AI & Automation</h3>
@@ -66,7 +66,7 @@ export const Challenges = () => {
           </div>
 
           <div className="bg-white border border-cardborder rounded-card p-8 shadow-sm flex flex-col">
-            <div className="w-10 h-10 bg-teal/10 rounded-lg flex items-center justify-center mb-6 text-teal">
+            <div className="w-10 h-10 bg-teal/10 rounded-full flex items-center justify-center mb-6 text-teal">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
             </div>
             <h3 className="font-heading font-bold text-xl mb-6 text-text">UX Research</h3>
@@ -91,7 +91,7 @@ export const Challenges = () => {
           </div>
 
           <div className="bg-white border border-cardborder rounded-card p-8 shadow-sm flex flex-col">
-            <div className="w-10 h-10 bg-teal/10 rounded-lg flex items-center justify-center mb-6 text-teal">
+            <div className="w-10 h-10 bg-teal/10 rounded-full flex items-center justify-center mb-6 text-teal">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>
             </div>
             <h3 className="font-heading font-bold text-xl mb-6 text-text">Product Design</h3>
@@ -136,47 +136,71 @@ export const Toolkit = () => {
 
         <div className="lg:col-span-7 space-y-4">
           <div className="bg-white border border-cardborder rounded-card p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <span className="text-primary font-heading font-bold text-xl">01</span>
-                <h3 className="font-heading font-bold text-lg text-text">Automation & Ops</h3>
-              </div>
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path></svg>
+            <div className="flex items-center gap-4 mb-5">
+              <span className="text-primary font-heading font-bold text-xl">01</span>
+              <h3 className="font-heading font-bold text-lg text-text">Automation & Ops</h3>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {['Make.com', 'n8n', 'Zapier', 'OpenAI API', 'Anthropic API', 'Python', 'Airtable'].map(t => (
-                <span key={t} className="px-3 py-1.5 bg-surface border border-cardborder rounded-md text-xs font-medium text-text">{t}</span>
-              ))}
+            <div className="mb-3">
+              <div className="text-[10px] font-bold uppercase tracking-label text-primary mb-2">Skills</div>
+              <div className="flex flex-wrap gap-2">
+                {['Workflow design', 'Process automation', 'AI agent development', 'Prompt engineering', 'System integration', 'Data pipeline architecture'].map(s => (
+                  <span key={s} className="px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-xs font-medium text-primary">{s}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-label text-grey mb-2">Tools</div>
+              <div className="flex flex-wrap gap-2">
+                {['Make.com', 'n8n', 'Zapier', 'OpenAI API', 'Anthropic API', 'Python', 'Airtable'].map(t => (
+                  <span key={t} className="px-3 py-1.5 bg-surface border border-cardborder rounded-full text-xs font-medium text-text">{t}</span>
+                ))}
+              </div>
             </div>
           </div>
 
           <div className="bg-white border border-cardborder rounded-card p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <span className="text-primary font-heading font-bold text-xl opacity-50">02</span>
-                <h3 className="font-heading font-bold text-lg text-text">UX & Research</h3>
-              </div>
-              <svg className="w-5 h-5 text-grey" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div className="flex items-center gap-4 mb-5">
+              <span className="text-primary font-heading font-bold text-xl opacity-50">02</span>
+              <h3 className="font-heading font-bold text-lg text-text">UX & Research</h3>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {['Dovetail', 'Lookback', 'UserTesting', 'Maze', 'Hotjar', 'Miro', 'Optimal Workshop'].map(t => (
-                <span key={t} className="px-3 py-1.5 bg-surface border border-cardborder rounded-md text-xs font-medium text-text">{t}</span>
-              ))}
+            <div className="mb-3">
+              <div className="text-[10px] font-bold uppercase tracking-label text-teal mb-2">Skills</div>
+              <div className="flex flex-wrap gap-2">
+                {['Moderated usability testing', 'Semi-structured interviews', 'Tree testing', 'Card sorting', 'Diary studies', 'Thematic analysis', 'Statistical analysis', 'Journey mapping', 'Participatory design', 'Concept validation'].map(s => (
+                  <span key={s} className="px-3 py-1.5 bg-teal/10 border border-teal/20 rounded-full text-xs font-medium text-teal">{s}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-label text-grey mb-2">Tools</div>
+              <div className="flex flex-wrap gap-2">
+                {['Dovetail', 'Lookback', 'UserTesting', 'Maze', 'Hotjar', 'Miro', 'Optimal Workshop', 'dScout'].map(t => (
+                  <span key={t} className="px-3 py-1.5 bg-surface border border-cardborder rounded-full text-xs font-medium text-text">{t}</span>
+                ))}
+              </div>
             </div>
           </div>
 
           <div className="bg-white border border-cardborder rounded-card p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <span className="text-primary font-heading font-bold text-xl opacity-50">03</span>
-                <h3 className="font-heading font-bold text-lg text-text">Product & Design</h3>
-              </div>
-              <svg className="w-5 h-5 text-grey" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div className="flex items-center gap-4 mb-5">
+              <span className="text-primary font-heading font-bold text-xl opacity-50">03</span>
+              <h3 className="font-heading font-bold text-lg text-text">Product & Design</h3>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {['Figma', 'FigJam', 'Protopie', 'Framer', 'Zeroheight'].map(t => (
-                <span key={t} className="px-3 py-1.5 bg-surface border border-cardborder rounded-md text-xs font-medium text-text">{t}</span>
-              ))}
+            <div className="mb-3">
+              <div className="text-[10px] font-bold uppercase tracking-label text-grey mb-2">Skills</div>
+              <div className="flex flex-wrap gap-2">
+                {['Information architecture', 'Wireframing', 'Interaction design', 'Design systems', 'UX strategy', 'Cognitive load analysis', 'Prototyping', 'Product roadmapping'].map(s => (
+                  <span key={s} className="px-3 py-1.5 bg-surface border border-cardborder rounded-full text-xs font-medium text-text">{s}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-label text-grey mb-2">Tools</div>
+              <div className="flex flex-wrap gap-2">
+                {['Figma', 'FigJam', 'Protopie', 'Framer', 'Zeroheight'].map(t => (
+                  <span key={t} className="px-3 py-1.5 bg-surface border border-cardborder rounded-full text-xs font-medium text-text">{t}</span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -244,7 +268,7 @@ export const Partnerships = () => {
         <div className="animate-marquee flex items-center gap-4 px-2" style={{ animationDuration: '20s' }}>
           {['HP', 'Glovo', 'Renault Group', 'Stellantis', 'Oracle', 'HP', 'Glovo', 'Renault Group', 'Stellantis', 'Oracle'].map((name, i) => (
             <div key={i} className={`bg-white border border-cardborder rounded-card h-20 ${name === 'Renault Group' ? 'w-48' : 'w-40'} shrink-0 flex items-center justify-center shadow-sm`} aria-hidden={i > 4 ? true : undefined}>
-              <span className="text-gray-400 font-bold text-lg">{name}</span>
+              <span className="text-grey font-bold text-lg">{name}</span>
             </div>
           ))}
         </div>
@@ -256,7 +280,7 @@ export const Partnerships = () => {
 export const CTA = () => {
   return (
     <section className="max-w-7xl mx-auto px-8 pb-24">
-      <div className="bg-gradient-to-br from-surface to-[#E0F2F1] rounded-3xl p-12 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="bg-gradient-to-br from-surface to-[#E0F2F1] rounded-card p-12 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12">
         <div className="max-w-2xl">
           <h2 className="text-4xl md:text-5xl font-heading font-bold text-text mb-6 leading-tight">
             Let's talk about what you're trying to solve.
@@ -269,7 +293,7 @@ export const CTA = () => {
           <a href="mailto:jeremyguillaumedossantos@gmail.com" className="bg-teal text-white px-8 py-4 rounded-btn font-medium hover:bg-teal/90 transition-colors shadow-sm text-center">
             Book a Call
           </a>
-          <a href="/work" className="bg-white text-text px-8 py-4 rounded-btn font-medium hover:bg-gray-50 transition-colors shadow-sm text-center">
+          <a href="/work" className="bg-white text-text px-8 py-4 rounded-btn font-medium hover:bg-surface transition-colors shadow-sm text-center">
             View Work
           </a>
         </div>

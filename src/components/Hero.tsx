@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2, Lightbulb, Briefcase, Globe } from 'lucide-re
 import { motion } from 'framer-motion';
 import { AuroraBackground } from './ui/aurora-background';
 import { ProcessFlow } from './ui/process-flow';
+import { E } from './ui/E';
 
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,7 +45,7 @@ export const Hero = () => {
           <div className="lg:col-span-7 flex flex-col items-start text-left relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface text-grey text-sm font-medium mb-8">
             <span className="w-2 h-2 rounded-full bg-teal animate-pulse"></span>
-            Available for new projects · Madrid, Spain
+            <E k="hero.badge">Available for new projects · Barcelona, Spain</E>
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-[64px] font-heading font-bold text-text mb-6 tracking-tight leading-[1.1]">
@@ -60,15 +61,15 @@ export const Hero = () => {
           </h1>
 
           <p className="text-xl text-grey leading-relaxed mb-10 max-w-2xl">
-            9 years of UX research, product design, and AI automation — across automotive, delivery, and eCommerce. Now available to your team without the overhead.
+            <E k="hero.subtitle">9 years of UX research, product design, and AI automation — across automotive, delivery, and eCommerce. Now available to your team without the overhead.</E>
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 mb-12 w-full sm:w-auto">
             <a href="mailto:jeremyguillaumedossantos@gmail.com" className="w-full sm:w-auto text-center bg-primary text-white px-8 py-4 rounded-btn font-medium hover:bg-blue-700 transition-colors shadow-sm text-lg">
-              Book a Discovery Call
+              <E k="hero.cta1">Book a Discovery Call</E>
             </a>
             <Link to="/work" className="w-full sm:w-auto text-center bg-transparent border border-cardborder text-text px-8 py-4 rounded-btn font-medium hover:bg-surface transition-colors text-lg">
-              See My Work
+              <E k="hero.cta2">See My Work</E>
             </Link>
           </div>
         </div>

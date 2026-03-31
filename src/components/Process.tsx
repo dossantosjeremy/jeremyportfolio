@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { E } from './ui/E';
 
 export const Process = () => {
   const [activeTab, setActiveTab] = useState<'ai' | 'ux'>('ai');
@@ -54,10 +55,10 @@ export const Process = () => {
       <header className="pt-[80px] pb-12 px-8 text-center max-w-3xl mx-auto">
         <div className="text-teal text-[11px] font-medium uppercase tracking-label mb-4">How it works</div>
         <h1 className="text-5xl md:text-6xl font-heading font-bold text-text mb-6 tracking-tight">
-          Every project is different. The way I work stays consistent.
+          <E k="process.hero.heading">Every project is different. The way I work stays consistent.</E>
         </h1>
         <p className="text-lg md:text-xl text-grey leading-relaxed">
-          Here's what working together looks like — from first message to final handover. Two modes, one working style.
+          <E k="process.hero.sub">Here's what working together looks like — from first message to final handover. Two modes, one working style.</E>
         </p>
       </header>
 
@@ -80,87 +81,102 @@ export const Process = () => {
       {/* SECTION: TIMELINE */}
       <section className="bg-navy text-white py-[96px] px-8 overflow-hidden">
         <div className="max-w-3xl mx-auto relative min-h-[600px]">
-          
+
           {/* AI AUTOMATION STEPS */}
           <div id="ai-steps" className={`transition-opacity duration-150 relative ${activeTab === 'ai' ? 'block' : 'hidden'}`}>
-            <div className="absolute left-[15px] top-8 bottom-8 w-[1px] bg-white/15 z-0"></div>
+            <div className="absolute left-8 top-8 bottom-8 w-[1px] bg-white/15 z-0"></div>
 
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Discovery & Audit</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Week 0</span>
+            <div className="timeline-step relative flex justify-start pt-10 md:pt-16 md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">Before I build anything, I map the current state. We look at your existing workflows, tools, and team capacity — and identify where automation creates genuine leverage versus where it adds unnecessary complexity.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  📄 Workflow Opportunity Map — highest-value automation candidates ranked by impact and effort
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Week 0</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Week 0</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Discovery & Audit</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">Before I build anything, I map the current state. We look at your existing workflows, tools, and team capacity — and identify where automation creates genuine leverage versus where it adds unnecessary complexity.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    📄 Workflow Opportunity Map — highest-value automation candidates ranked by impact and effort
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Scoping & Agreement</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Week 1</span>
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">I write a project scope document that defines exactly what gets built, what's out of scope, the timeline, and the price. We agree on it in writing before any building begins. No ambiguity, no surprises.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  📄 Project Scope Document — signed before work starts
-                </div>
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Week 1</p>
               </div>
-            </div>
-
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Active Build</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Weeks 2–8</span>
-                </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">I build the automation in your stack, with full visibility at every stage. You receive updates every Monday, Wednesday, and Friday — what was done, what's next, and any blockers or decisions that need your input. You have access to the live environment throughout.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  🔧 Live Automation System — running in your environment, tested against real inputs
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Week 1</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Scoping & Agreement</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">I write a project scope document that defines exactly what gets built, what's out of scope, the timeline, and the price. We agree on it in writing before any building begins. No ambiguity, no surprises.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    📄 Project Scope Document — signed before work starts
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Handover & Documentation</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Final week</span>
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">Full asset transfer. I hand over the workflow files, credentials documentation, operator guide, and a recorded walkthrough so your team can manage it independently. Nothing is a black box.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  📦 Full Asset Transfer + Documentation + Video Walkthrough
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Weeks 2–8</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Weeks 2–8</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Active Build</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">I build the automation in your stack, with full visibility at every stage. You receive updates every Monday, Wednesday, and Friday — what was done, what's next, and any blockers or decisions that need your input. You have access to the live environment throughout.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    🔧 Live Automation System — running in your environment, tested against real inputs
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="timeline-step relative pl-12 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">14-Day Support</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Post-delivery</span>
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">I remain available for questions, minor fixes, and edge-case debugging for 14 days after handover. If you want ongoing support after that, we can discuss a retainer.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  ✅ 14-Day Async Support
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Final week</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Final week</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Handover & Documentation</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">Full asset transfer. I hand over the workflow files, credentials documentation, operator guide, and a recorded walkthrough so your team can manage it independently. Nothing is a black box.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    📦 Full Asset Transfer + Documentation + Video Walkthrough
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
+                </div>
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Post-delivery</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Post-delivery</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">14-Day Support</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">I remain available for questions, minor fixes, and edge-case debugging for 14 days after handover. If you want ongoing support after that, we can discuss a retainer.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    ✅ 14-Day Async Support
+                  </div>
                 </div>
               </div>
             </div>
@@ -168,84 +184,99 @@ export const Process = () => {
 
           {/* UX RESEARCH STEPS */}
           <div id="ux-steps" className={`transition-opacity duration-150 relative ${activeTab === 'ux' ? 'block' : 'hidden'}`}>
-            <div className="absolute left-[15px] top-8 bottom-8 w-[1px] bg-white/15 z-0"></div>
+            <div className="absolute left-8 top-8 bottom-8 w-[1px] bg-white/15 z-0"></div>
 
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Kickoff & Brief</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Day 1–2</span>
+            <div className="timeline-step relative flex justify-start pt-10 md:pt-16 md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">We align on the specific research question — not a generalised "learn about users" mandate, but a precise decision your team needs to make. I review any existing data, previous studies, and analytics you can share. This prevents us from re-learning what you already know.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  📄 Research Brief — defines the question, method, and success criteria
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Day 1–2</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Day 1–2</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Kickoff & Brief</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">We align on the specific research question — not a generalised "learn about users" mandate, but a precise decision your team needs to make. I review any existing data, previous studies, and analytics you can share. This prevents us from re-learning what you already know.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    📄 Research Brief — defines the question, method, and success criteria
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Research Design</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Days 3–5</span>
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">I propose a methodology matched to the question and your budget. Sometimes that's 8 moderated interviews. Sometimes it's a survey followed by 4 deep-dives. Sometimes it's a 60-minute unmoderated usability test with 20 participants. I'll tell you what I'd recommend and why — and we agree before recruiting begins.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  📄 Research Plan — method rationale, screening criteria, discussion guide, timeline
-                </div>
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Days 3–5</p>
               </div>
-            </div>
-
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Fieldwork</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Weeks 2–4</span>
-                </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">I run the sessions — recruiting, scheduling, moderating, and note-taking. I conduct sessions in English, French, Spanish, or Portuguese depending on your user base. Sessions are recorded (with consent) and I share raw recordings with you if you want them.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  🎙️ Raw Session Recordings + Transcripts + Observer Notes
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Days 3–5</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Research Design</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">I propose a methodology matched to the question and your budget. Sometimes that's 8 moderated interviews. Sometimes it's a survey followed by 4 deep-dives. Sometimes it's a 60-minute unmoderated usability test with 20 participants. I'll tell you what I'd recommend and why — and we agree before recruiting begins.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    📄 Research Plan — method rationale, screening criteria, discussion guide, timeline
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="timeline-step relative pl-12 mb-8 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Analysis & Synthesis</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Weeks 4–5</span>
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">I analyse the data using thematic analysis — grouping observations into patterns, surfacing the findings that challenge assumptions, and flagging the ones that support them. I prioritise insights by business impact, not frequency. The most common thing users said is not always the most important thing you should know.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  📊 Insight Repository — tagged, searchable, and shareable across your team
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Weeks 2–4</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Weeks 2–4</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Fieldwork</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">I run the sessions — recruiting, scheduling, moderating, and note-taking. I conduct sessions in English, French, Spanish, or Portuguese depending on your user base. Sessions are recorded (with consent) and I share raw recordings with you if you want them.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    🎙️ Raw Session Recordings + Transcripts + Observer Notes
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="timeline-step relative pl-12 opacity-0 translate-y-5">
-              <div className="absolute left-0 top-6 w-[31px] h-[31px] rounded-full bg-navy flex items-center justify-center z-10">
-                <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
-              </div>
-              <div className="border border-white/10 rounded-card p-8 bg-transparent">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <h3 className="text-2xl font-heading font-bold text-white">Readout & Recommendations</h3>
-                  <span className="text-teal text-xs font-bold uppercase tracking-label">Final week</span>
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
                 </div>
-                <p className="text-gray-400 text-lg mb-6 leading-relaxed">I present findings to your team in a structured readout session — usually 60–90 minutes. The format is: key insights, implications, and a prioritised recommendation set. I include a "what we'd do next" section so you leave with a clear path forward, not just a document to file.</p>
-                <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
-                  📊 Insight Report + Readout Deck + Recommendation Workshop (optional)
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Weeks 4–5</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Weeks 4–5</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Analysis & Synthesis</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">I analyse the data using thematic analysis — grouping observations into patterns, surfacing the findings that challenge assumptions, and flagging the ones that support them. I prioritise insights by business impact, not frequency. The most common thing users said is not always the most important thing you should know.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    📊 Insight Repository — tagged, searchable, and shareable across your team
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="timeline-step relative flex justify-start md:gap-10 opacity-0 translate-y-5">
+              <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start w-[72px] md:w-[190px] shrink-0">
+                <div className="h-10 absolute left-3 top-0 w-10 rounded-full bg-navy border border-white/20 flex items-center justify-center z-10">
+                  <div className="w-[9px] h-[9px] rounded-full bg-teal"></div>
+                </div>
+                <p className="hidden md:block text-2xl md:pl-20 font-bold text-white/25">Final week</p>
+              </div>
+              <div className="relative pl-14 md:pl-0 w-full pb-8">
+                <p className="md:hidden text-base mb-3 font-bold text-white/40">Final week</p>
+                <div className="border border-white/10 rounded-card p-8 bg-transparent">
+                  <h3 className="text-2xl font-heading font-bold text-white mb-3">Readout & Recommendations</h3>
+                  <p className="text-gray-400 text-lg mb-6 leading-relaxed">I present findings to your team in a structured readout session — usually 60–90 minutes. The format is: key insights, implications, and a prioritised recommendation set. I include a "what we'd do next" section so you leave with a clear path forward, not just a document to file.</p>
+                  <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    📊 Insight Report + Readout Deck + Recommendation Workshop (optional)
+                  </div>
                 </div>
               </div>
             </div>
@@ -281,48 +312,6 @@ export const Process = () => {
               </div>
               <h3 className="font-heading font-bold text-xl text-text mb-3">Your tool of choice</h3>
               <p className="text-grey leading-relaxed">Slack, email, Notion, Linear, WhatsApp — wherever your team already lives. I adapt to your workflow, not the other way around.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: ENGAGEMENT TIERS */}
-      <section className="bg-surface py-24 px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-heading font-bold text-text mb-12 text-center">Three ways to engage.</h2>
-          
-          <div className="flex flex-col gap-4">
-            <div className="bg-white rounded-card shadow-sm border-l-4 border-primary p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h3 className="font-heading font-bold text-2xl text-text mb-1">Exploration Milestone</h3>
-                <p className="text-grey font-medium">1–2 weeks</p>
-                <p className="text-grey text-sm mt-1">Best for: first discovery, audit, or proof-of-concept</p>
-              </div>
-              <div className="md:text-right">
-                <div className="font-heading font-bold text-2xl text-text">€800–€2,000</div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-card shadow-sm border-l-4 border-primary p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h3 className="font-heading font-bold text-2xl text-text mb-1">Fixed-Scope Project</h3>
-                <p className="text-grey font-medium">2–12 weeks</p>
-                <p className="text-grey text-sm mt-1">Best for: full research study, product redesign, or end-to-end automation build</p>
-              </div>
-              <div className="md:text-right">
-                <div className="font-heading font-bold text-2xl text-text">Custom quote</div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-card shadow-sm border-l-4 border-primary p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h3 className="font-heading font-bold text-2xl text-text mb-1">Monthly Retainer</h3>
-                <p className="text-grey font-medium">Rolling — cancel any time</p>
-                <p className="text-grey text-sm mt-1">Best for: ongoing research, continuous iteration, or automation maintenance</p>
-              </div>
-              <div className="md:text-right">
-                <div className="font-heading font-bold text-2xl text-text">€750–€3,000<span className="text-lg text-grey font-normal">/mo</span></div>
-              </div>
             </div>
           </div>
         </div>
@@ -380,9 +369,9 @@ export const Process = () => {
       {/* SECTION: CTA */}
       <section className="bg-primary text-white py-24 px-8 text-center">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">Ready to start?</h2>
-          <p className="text-white/80 text-lg mb-10 leading-relaxed">Book a 20-minute discovery call. No pitch, no pressure — just a conversation about what you're trying to solve and whether I'm the right person to help.</p>
-          <a href="mailto:jeremyguillaumedossantos@gmail.com" className="inline-block bg-white text-primary px-10 py-4 rounded-btn font-bold text-lg hover:bg-gray-100 transition-colors shadow-sm">
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6"><E k="process.cta.heading">Ready to start?</E></h2>
+          <p className="text-white/80 text-lg mb-10 leading-relaxed"><E k="process.cta.sub">Book a 20-minute discovery call. No pitch, no pressure — just a conversation about what you're trying to solve and whether I'm the right person to help.</E></p>
+          <a href="mailto:jeremyguillaumedossantos@gmail.com" className="inline-block bg-white text-primary px-10 py-4 rounded-btn font-bold text-lg hover:bg-surface transition-colors shadow-sm">
             Book a Discovery Call
           </a>
         </div>

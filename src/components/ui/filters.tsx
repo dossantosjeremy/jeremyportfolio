@@ -108,33 +108,51 @@ export enum Discipline {
   UX_RESEARCH = "UX Research",
   PRODUCT_DESIGN = "Product Design",
   AI_AUTOMATION = "AI Automation",
+  PRODUCT_MANAGEMENT = "Product Management",
+  HUMAN_FACTORS = "Human Factors",
 }
 
 export enum Industry {
-  HEALTHCARE = "Healthcare",
-  FINTECH = "Fintech",
-  ECOMMERCE = "E-commerce",
-  SAAS = "SaaS",
+  AUTOMOTIVE = "Automotive",
+  ON_DEMAND_DELIVERY = "On-Demand Delivery",
+  ECOMMERCE = "eCommerce",
+  CONSUMER_APPS = "Consumer Apps",
+  CONSUMER_ELECTRONICS = "Consumer Electronics",
+  B2B_SAAS = "B2B SaaS",
+  CONSULTING = "Consulting",
+  MEDIA = "Media",
 }
 
 export enum Company {
-  GOOGLE = "Google",
-  STARTUP_X = "Startup X",
+  PSA = "PSA Peugeot Citroën",
+  RENAULT = "Renault",
   GLOVO = "Glovo",
   HP = "HP",
+  VD = "V+D",
+  MOMENTUM = "Momentum",
+  SOUNDJOURNEY = "SoundJourney",
+  AAB = "AAB Media",
+  CROWN_JEWEL = "Crown Jewel Marketing",
+  WEOP = "WEOP",
 }
 
 export enum Market {
-  US = "US",
-  EUROPE = "Europe",
   GLOBAL = "Global",
+  EUROPE = "Europe",
+  FRANCE = "France",
+  SPAIN = "Spain",
+  USA = "USA",
+  MULTIPLE = "Multiple",
 }
 
 export enum Year {
+  Y2025 = "2025",
   Y2024 = "2024",
   Y2023 = "2023",
   Y2022 = "2022",
   Y2021 = "2021",
+  Y2018 = "2018",
+  Y2016 = "2016",
 }
 
 export enum Methods {
@@ -142,26 +160,40 @@ export enum Methods {
   USABILITY_TESTING = "Usability Testing",
   CARD_SORTING = "Card Sorting",
   SURVEYS = "Surveys",
+  TREE_TESTING = "Tree testing",
+  EDA = "EDA",
+  CONTEXTUAL_INQUIRY = "Contextual inquiry",
+  COMPETITIVE_ANALYSIS = "Competitive analysis",
+  CONCEPT_TESTING = "Concept testing",
+  PROTOTYPE_TESTING = "Prototype testing",
 }
 
 export enum Stack {
-  REACT = "React",
-  PYTHON = "Python",
-  ZAPIER = "Zapier",
+  FIGMA = "Figma",
   N8N = "n8n",
   MAKE = "Make",
+  GPT = "GPT",
+  WHISPER = "Whisper",
+  TYPEFORM = "Typeform",
+  AIRTABLE = "Airtable",
+  GOOGLE_SHEETS = "Google Sheets",
+  HEYGEN = "HeyGen",
+  REACT = "React",
+  SPOTIFY_API = "Spotify API",
 }
 
 export enum ProjectType {
+  RESEARCH = "Research",
+  DESIGN = "Design",
+  AUTOMATION = "Automation",
   DISCOVERY = "Discovery",
   EVALUATIVE = "Evaluative",
-  DESIGN = "Design",
 }
 
 export enum WorkType {
-  IN_HOUSE = "In-house",
-  FREELANCE = "Freelance",
-  SIDE_PROJECT = "Side-project",
+  IN_HOUSE = "in-house",
+  FREELANCE = "freelance",
+  SIDE_PROJECT = "side-project",
 }
 
 export type FilterOption = {

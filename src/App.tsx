@@ -15,6 +15,8 @@ import { LogoStrip, Challenges, Toolkit, FAQ, Partnerships, CTA } from './compon
 import { CaseStudy } from './pages/CaseStudy';
 import { AnimatedText } from './components/ui/animated-text';
 import { NavBar } from './components/ui/tubelight-navbar';
+import { EditProvider } from './context/EditContext';
+import { EditModeUI } from './components/EditModeUI';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -57,7 +59,7 @@ const Home = () => (
     <Hero />
     <Philosophy />
     <WhyWorkWithMe />
-    <Work />
+    <Work homepage />
     <Expertise />
     <Challenges />
     <Toolkit />
@@ -70,28 +72,31 @@ const Home = () => (
 
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="min-h-screen bg-white font-sans text-text selection:bg-primary selection:text-white">
-        <Navigation />
+    <EditProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="min-h-screen bg-white font-sans text-text selection:bg-primary selection:text-white">
+          <Navigation />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/work" element={<Work />} />
-            <Route path="/work/:slug" element={<CaseStudy />} />
-            <Route path="/process" element={<Process />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/demo" element={<TimelineDemo />} />
-            <Route path="/contact" element={<Footer />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes>
-        </main>
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/work" element={<Work />} />
+              <Route path="/work/:slug" element={<CaseStudy />} />
+              <Route path="/process" element={<Process />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/demo" element={<TimelineDemo />} />
+              <Route path="/contact" element={<Footer />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </main>
 
-        <Footer />
-      </div>
-    </Router>
+          <Footer />
+          <EditModeUI />
+        </div>
+      </Router>
+    </EditProvider>
   );
 }
 
