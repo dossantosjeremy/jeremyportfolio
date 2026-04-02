@@ -110,27 +110,16 @@ export const VisualEditor: React.FC = () => {
           { name: 'Mobile',  width: '390px',  widthMedia: '390px' },
         ],
       },
-      // Remove the default GrapesJS top-bar (we supply our own)
-      panels: {
-        defaults: [
-          {
-            id: 'panel-switcher',
-            el: '.panel__switcher',
-            buttons: [
-              { id: 'show-layers',  active: true,  label: 'Layers',  command: 'show-layers',  togglable: false },
-              { id: 'show-style',   active: false, label: 'Styles',  command: 'show-styles',  togglable: false },
-              { id: 'show-traits',  active: false, label: 'Traits',  command: 'show-traits',  togglable: false },
-            ],
-          },
-        ],
-      },
     });
 
     editorRef.current = editor;
 
     // ── Custom blocks ───────────────────────────────────────────────────────
     const bm = editor.BlockManager;
-    bm.getAll().reset(); // clear defaults — we supply our own
+    // Remove the generic default blocks to avoid duplication
+    ['column1','column2','column3','column3-7','text','link','image','video','map','link-block','quote','text-basic'].forEach(id => {
+      try { bm.remove(id); } catch { /* ignore if not present */ }
+    });
 
     const icon = (svg: string) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">${svg}</svg>`;
 
