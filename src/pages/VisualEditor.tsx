@@ -128,6 +128,99 @@ export const VisualEditor: React.FC = () => {
 
     editorRef.current = editor;
 
+    // ── Custom blocks ───────────────────────────────────────────────────────
+    const bm = editor.BlockManager;
+    bm.getAll().reset(); // clear defaults — we supply our own
+
+    const icon = (svg: string) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="28" height="28">${svg}</svg>`;
+
+    // Layout
+    bm.add('section-1', {
+      label: '1 Section',   category: 'Layout',
+      media: icon('<rect x="2" y="4" width="20" height="16" rx="2"/>'),
+      content: '<section style="padding:64px 32px"><div style="max-width:1120px;margin:0 auto"><p>Section content goes here.</p></div></section>',
+    });
+    bm.add('section-2', {
+      label: '1/2 Section',  category: 'Layout',
+      media: icon('<rect x="2" y="4" width="9" height="16" rx="1"/><rect x="13" y="4" width="9" height="16" rx="1"/>'),
+      content: '<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:64px 32px"><div><p>Left column</p></div><div><p>Right column</p></div></div>',
+    });
+    bm.add('section-3', {
+      label: '1/3 Section', category: 'Layout',
+      media: icon('<rect x="2" y="4" width="5.5" height="16" rx="1"/><rect x="9.25" y="4" width="5.5" height="16" rx="1"/><rect x="16.5" y="4" width="5.5" height="16" rx="1"/>'),
+      content: '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;padding:64px 32px"><div><p>Column 1</p></div><div><p>Column 2</p></div><div><p>Column 3</p></div></div>',
+    });
+    bm.add('section-37', {
+      label: '3/7 Section', category: 'Layout',
+      media: icon('<rect x="2" y="4" width="8" height="16" rx="1"/><rect x="12" y="4" width="10" height="16" rx="1"/>'),
+      content: '<div style="display:grid;grid-template-columns:3fr 4fr;gap:32px;padding:64px 32px"><div><p>Sidebar</p></div><div><p>Main content</p></div></div>',
+    });
+
+    // Content
+    bm.add('text', {
+      label: 'Text', category: 'Content',
+      media: icon('<path d="M4 6h16M4 10h16M4 14h10"/>'),
+      content: '<p style="font-size:16px;line-height:1.7;color:#1d1d1f">Your text here.</p>',
+    });
+    bm.add('heading', {
+      label: 'Heading', category: 'Content',
+      media: icon('<path d="M4 6h4m0 0v12m0-6h8m0-6h4m0 0v12"/>'),
+      content: '<h2 style="font-size:2rem;font-weight:700;letter-spacing:-0.02em;color:#1d1d1f;margin-bottom:16px">Section heading</h2>',
+    });
+    bm.add('text-section', {
+      label: 'Text Section', category: 'Content',
+      media: icon('<path d="M4 5h16M4 9h12M4 13h16M4 17h8"/>'),
+      content: '<div style="padding:64px 32px"><div style="max-width:680px"><p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#0066cc;margin-bottom:12px">Label</p><h2 style="font-size:2rem;font-weight:700;color:#1d1d1f;margin-bottom:16px">Section heading</h2><p style="font-size:18px;line-height:1.7;color:#86868b">Supporting body copy that describes the section in more detail.</p></div></div>',
+    });
+    bm.add('quote', {
+      label: 'Quote', category: 'Content',
+      media: icon('<path d="M3 21l2-6a9 9 0 1 1 3.2 3.2L3 21"/><path d="M8 12h.01M12 12h.01M16 12h.01"/>'),
+      content: '<blockquote style="border-left:4px solid #0066cc;padding:16px 24px;margin:24px 0;background:#f5f5f7;border-radius:0 12px 12px 0"><p style="font-style:italic;color:#86868b;line-height:1.7">An insightful quote or callout text.</p></blockquote>',
+    });
+    bm.add('image', {
+      label: 'Image', category: 'Content',
+      media: icon('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>'),
+      content: '<figure style="margin:24px 0"><img src="https://placehold.co/1200x600" alt="Image" style="width:100%;border-radius:16px;display:block"/><figcaption style="text-align:center;font-size:12px;color:#86868b;margin-top:8px">Image caption</figcaption></figure>',
+    });
+    bm.add('divider', {
+      label: 'Divider', category: 'Content',
+      media: icon('<line x1="3" y1="12" x2="21" y2="12"/>'),
+      content: '<hr style="border:none;border-top:1px solid #d2d2d7;margin:32px 0"/>',
+    });
+
+    // Interactive
+    bm.add('button', {
+      label: 'Button', category: 'Interactive',
+      media: icon('<rect x="3" y="8" width="18" height="8" rx="9999"/><path d="M8 12h8"/>'),
+      content: '<a href="#" style="display:inline-block;background:#0066cc;color:#fff;padding:14px 28px;border-radius:9999px;font-size:16px;font-weight:500;text-decoration:none">Button label</a>',
+    });
+    bm.add('link', {
+      label: 'Link', category: 'Interactive',
+      media: icon('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'),
+      content: '<a href="#" style="color:#0066cc;font-size:16px;text-decoration:none">Link text →</a>',
+    });
+    bm.add('link-block', {
+      label: 'Link Block', category: 'Interactive',
+      media: icon('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 13a5 5 0 0 0 7.54.54l1-1"/><path d="M14 11a5 5 0 0 0-7.54-.54l-1 1"/>'),
+      content: '<a href="#" style="display:block;padding:24px;border:1px solid #d2d2d7;border-radius:16px;text-decoration:none;color:inherit"><p style="font-weight:600;color:#1d1d1f;margin-bottom:6px">Card title</p><p style="font-size:14px;color:#86868b">Short description</p></a>',
+    });
+
+    // Grid / List
+    bm.add('grid-items', {
+      label: 'Grid Items', category: 'Collections',
+      media: icon('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'),
+      content: '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:32px 0">' +
+        ['1','2','3'].map(() => '<div style="border:1px solid #d2d2d7;border-radius:16px;padding:24px"><p style="font-weight:600;color:#1d1d1f;margin-bottom:8px">Card title</p><p style="font-size:14px;color:#86868b">Card description text goes here.</p></div>').join('') +
+        '</div>',
+    });
+    bm.add('list-items', {
+      label: 'List Items', category: 'Collections',
+      media: icon('<line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/>'),
+      content: '<ul style="list-style:none;padding:0;margin:0">' +
+        ['Item one','Item two','Item three'].map(t => `<li style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #d2d2d7"><span style="width:8px;height:8px;border-radius:50%;background:#0066cc;flex-shrink:0;margin-top:6px"></span><span style="color:#1d1d1f">${t}</span></li>`).join('') +
+        '</ul>',
+    });
+
     // Re-inject CSS whenever the canvas frame reloads
     editor.on('canvas:frame:load', () => {
       const canvasDoc = editor.Canvas.getDocument();

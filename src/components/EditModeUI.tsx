@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useEditMode, EDIT_PREFIX } from '../context/EditContext';
-import { Pencil, X, RotateCcw, LogOut, Lock } from 'lucide-react';
+import { Pencil, X, RotateCcw, LogOut, Lock, Layers } from 'lucide-react';
 
 function LoginModal({ onClose }: { onClose: () => void }) {
   const { adminLogin, toggle } = useEditMode();
@@ -95,19 +96,28 @@ export function EditModeUI() {
     <>
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
 
-      {/* Floating toggle button — only visible when admin */}
+      {/* Floating admin buttons — only visible when admin */}
       {isAdmin && (
-        <button
-          onClick={toggle}
-          title={isEditing ? 'Exit Edit Mode (Ctrl+Shift+E)' : 'Edit Content (Ctrl+Shift+E)'}
-          className={`fixed bottom-24 right-4 z-[100] w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-all ${
-            isEditing
-              ? 'bg-blue-600 text-white shadow-blue-300'
-              : 'bg-white text-gray-500 border border-gray-200 hover:border-blue-400 hover:text-blue-600'
-          }`}
-        >
-          {isEditing ? <X size={18} /> : <Pencil size={16} />}
-        </button>
+        <div className="fixed bottom-24 right-4 z-[100] flex flex-col gap-2 items-end">
+          <Link
+            to="/admin/visual-editor"
+            title="Visual Editor"
+            className="w-11 h-11 rounded-full shadow-lg flex items-center justify-center bg-white text-gray-500 border border-gray-200 hover:border-blue-400 hover:text-blue-600 transition-all"
+          >
+            <Layers size={16} />
+          </Link>
+          <button
+            onClick={toggle}
+            title={isEditing ? 'Exit Edit Mode (Ctrl+Shift+E)' : 'Edit Content (Ctrl+Shift+E)'}
+            className={`w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-all ${
+              isEditing
+                ? 'bg-blue-600 text-white shadow-blue-300'
+                : 'bg-white text-gray-500 border border-gray-200 hover:border-blue-400 hover:text-blue-600'
+            }`}
+          >
+            {isEditing ? <X size={18} /> : <Pencil size={16} />}
+          </button>
+        </div>
       )}
 
       {/* Edit mode banner */}
@@ -125,6 +135,12 @@ export function EditModeUI() {
             >
               <RotateCcw size={11} /> Reset all
             </button>
+            <Link
+              to="/admin/visual-editor"
+              className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 px-3 py-1 rounded font-medium transition-colors"
+            >
+              <Layers size={11} /> Visual Editor
+            </Link>
             <button
               onClick={toggle}
               className="bg-white/20 hover:bg-white/30 px-3 py-1 rounded font-medium transition-colors"
