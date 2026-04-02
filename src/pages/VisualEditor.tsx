@@ -6,6 +6,10 @@ import 'grapesjs/dist/css/grapes.min.css';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 export const GJS_OVERRIDE_PREFIX = 'gjs-override:';
+const GJS_HISTORY_PREFIX         = 'gjs-history:';
+const MAX_SNAPSHOTS              = 30; // per page
+
+type Snapshot = { ts: number; label: string; html: string; css: string };
 
 const PAGES = [
   { key: 'home',     label: 'Home',     url: '/' },
@@ -46,6 +50,19 @@ function injectLinks(doc: Document, hrefs: string[]) {
   });
 }
 
+function loadSnapshots(pageKey: string): Snapshot[] {
+  try {
+    const raw = localStorage.getItem(GJS_HISTORY_PREFIX + pageKey);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function formatTs(ts: number): string {
+  const d = new Date(ts);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) +
+    ' · ' + d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 export const VisualEditor: React.FC = () => {
   const mountRef           = useRef<HTMLDivElement>(null);
@@ -53,6 +70,8 @@ export const VisualEditor: React.FC = () => {
   const editorRef          = useRef<any>(null);
   const capturedCssRef     = useRef('');
   const capturedLinksRef   = useRef<string[]>([]);
+  const historyDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activePageRef      = useRef(PAGES[0]);
 
   const [activePage, setActivePage] = useState(PAGES[0]);
   const [status, setStatus]         = useState<'idle' | 'loading' | 'ready'>('idle');
@@ -70,6 +89,10 @@ export const VisualEditor: React.FC = () => {
   const [showKeyInput,setShowKeyInput]= useState(false);
   const [selectedLabel,setSelectedLabel] = useState<string|null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // ── History state ──────────────────────────────────────────────────────────
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [snapshots,   setSnapshots]   = useState<Snapshot[]>(() => loadSnapshots(PAGES[0].key));
 
   // ── Load a page into GrapesJS ──────────────────────────────────────────────
   const loadPage = useCallback((page: typeof PAGES[0]) => {
@@ -145,6 +168,24 @@ export const VisualEditor: React.FC = () => {
     // Track selected element for Claude context
     editor.on('component:selected',   (c: any) => setSelectedLabel(c?.getName?.() ?? 'element'));
     editor.on('component:deselected', ()        => setSelectedLabel(null));
+
+    // Auto-snapshot: debounce 3 s after any change so history stays current
+    const scheduleSnapshot = (label: string) => {
+      if (historyDebounceRef.current) clearTimeout(historyDebounceRef.current);
+      historyDebounceRef.current = setTimeout(() => {
+        const pageKey = activePageRef.current.key;
+        const html    = editor.getHtml();
+        const css     = editor.getCss();
+        const snap: Snapshot = { ts: Date.now(), label, html, css };
+        setSnapshots(prev => {
+          const next = [snap, ...prev].slice(0, MAX_SNAPSHOTS);
+          try { localStorage.setItem(GJS_HISTORY_PREFIX + pageKey, JSON.stringify(next)); } catch { /* quota */ }
+          return next;
+        });
+      }, 3000);
+    };
+    editor.on('component:update', () => scheduleSnapshot('Auto-save'));
+    editor.on('style:update',     () => scheduleSnapshot('Style change'));
 
     // ── Custom blocks ───────────────────────────────────────────────────────
     const bm = editor.BlockManager;
@@ -263,7 +304,9 @@ export const VisualEditor: React.FC = () => {
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleSelectPage = (page: typeof PAGES[0]) => {
     setActivePage(page);
+    activePageRef.current = page;
     setSaveLabel('Save Page');
+    setSnapshots(loadSnapshots(page.key)); // load this page's history
     loadPage(page);
   };
 
@@ -346,6 +389,26 @@ For copy-only changes just return the text. Be concise and direct.`;
     } else {
       editorRef.current?.setComponents(html);
     }
+  };
+
+  // ── Undo / Redo ────────────────────────────────────────────────────────────
+  const handleUndo = () => editorRef.current?.runCommand('core:undo');
+  const handleRedo = () => editorRef.current?.runCommand('core:redo');
+
+  // ── Snapshot restore ───────────────────────────────────────────────────────
+  const handleRestoreSnapshot = (snap: Snapshot) => {
+    if (!confirm(`Restore snapshot from ${formatTs(snap.ts)}?\nCurrent unsaved changes will be lost.`)) return;
+    const editor = editorRef.current;
+    if (!editor) return;
+    editor.setComponents(snap.html);
+    editor.setStyle(snap.css);
+    setHistoryOpen(false);
+  };
+
+  const handleClearHistory = () => {
+    if (!confirm('Clear all history for this page?')) return;
+    localStorage.removeItem(GJS_HISTORY_PREFIX + activePageRef.current.key);
+    setSnapshots([]);
   };
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -455,6 +518,35 @@ For copy-only changes just return the text. Be concise and direct.`;
           }}
         >
           ✦ Claude{selectedLabel ? ` · ${selectedLabel}` : ''}
+        </button>
+
+        <div style={{ width: 1, height: 20, background: '#2a2a2a', margin: '0 2px' }} />
+
+        {/* ── Undo / Redo ── */}
+        <button
+          onClick={handleUndo}
+          title="Undo (⌘Z)"
+          style={{ padding: '4px 9px', borderRadius: 6, fontSize: 14, background: 'transparent', color: '#888', border: '1px solid #2a2a2a', cursor: 'pointer' }}
+        >↩</button>
+        <button
+          onClick={handleRedo}
+          title="Redo (⌘⇧Z)"
+          style={{ padding: '4px 9px', borderRadius: 6, fontSize: 14, background: 'transparent', color: '#888', border: '1px solid #2a2a2a', cursor: 'pointer' }}
+        >↪</button>
+
+        {/* ── History ── */}
+        <button
+          onClick={() => setHistoryOpen(o => !o)}
+          title="Change history"
+          style={{
+            padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600,
+            background: historyOpen ? '#292524' : 'transparent',
+            color: historyOpen ? '#fbbf24' : '#888',
+            border: `1px solid ${historyOpen ? '#78350f' : '#2a2a2a'}`,
+            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
+          }}
+        >
+          🕐 {snapshots.length > 0 ? snapshots.length : ''}
         </button>
       </div>
 
@@ -582,6 +674,73 @@ For copy-only changes just return the text. Be concise and direct.`;
             >
               Send
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── History panel ── */}
+      {historyOpen && (
+        <div style={{
+          position: 'absolute', left: 0, top: 48, bottom: 0, width: 280,
+          background: '#111', borderRight: '1px solid #2a2a2a',
+          display: 'flex', flexDirection: 'column', zIndex: 20,
+        }}>
+          {/* Header */}
+          <div style={{ padding: '10px 14px', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <span style={{ color: '#fbbf24', fontSize: 13, fontWeight: 600 }}>🕐 Change History</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {snapshots.length > 0 && (
+                <button
+                  onClick={handleClearHistory}
+                  style={{ fontSize: 10, color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                >
+                  Clear all
+                </button>
+              )}
+              <button onClick={() => setHistoryOpen(false)} style={{ color: '#555', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, lineHeight: 1, padding: '0 2px' }}>×</button>
+            </div>
+          </div>
+
+          {/* Page label */}
+          <div style={{ padding: '6px 14px', borderBottom: '1px solid #2a2a2a', fontSize: 10, color: '#555', flexShrink: 0 }}>
+            {activePage.label} · auto-saved every 3s after changes
+          </div>
+
+          {/* Snapshot list */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+            {snapshots.length === 0 ? (
+              <div style={{ padding: '16px 14px', color: '#444', fontSize: 11, lineHeight: 1.7 }}>
+                <p>No snapshots yet.</p>
+                <p style={{ marginTop: 6 }}>Snapshots are captured automatically 3 seconds after you make a change in the editor.</p>
+              </div>
+            ) : (
+              snapshots.map((snap, i) => (
+                <div
+                  key={snap.ts}
+                  style={{
+                    padding: '9px 14px', borderBottom: '1px solid #1a1a1a',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
+                  }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 11, color: i === 0 ? '#fbbf24' : '#888', fontWeight: i === 0 ? 600 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {snap.label}{i === 0 ? ' · latest' : ''}
+                    </div>
+                    <div style={{ fontSize: 10, color: '#555', marginTop: 2 }}>{formatTs(snap.ts)}</div>
+                  </div>
+                  <button
+                    onClick={() => handleRestoreSnapshot(snap)}
+                    style={{
+                      padding: '3px 9px', borderRadius: 6, fontSize: 10, fontWeight: 600,
+                      background: 'transparent', color: '#888', border: '1px solid #333',
+                      cursor: 'pointer', flexShrink: 0,
+                    }}
+                  >
+                    Restore
+                  </button>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
