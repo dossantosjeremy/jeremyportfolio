@@ -48,6 +48,16 @@ export const VisualEditor: React.FC = () => {
     Object.fromEntries(PAGES.map(p => [p.key, !!localStorage.getItem(GJS_OVERRIDE_PREFIX + p.key)]))
   );
 
+  // ── Claude chat state ──────────────────────────────────────────────────────
+  const [chatOpen,    setChatOpen]    = useState(false);
+  const [chatMsgs,    setChatMsgs]    = useState<{role:'user'|'assistant';content:string}[]>([]);
+  const [chatInput,   setChatInput]   = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [apiKey,      setApiKey]      = useState(() => localStorage.getItem('claude-api-key') ?? '');
+  const [showKeyInput,setShowKeyInput]= useState(false);
+  const [selectedLabel,setSelectedLabel] = useState<string|null>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   // ── Load a page into GrapesJS ──────────────────────────────────────────────
   const loadPage = useCallback((page: typeof PAGES[0]) => {
     const iframe = captureRef.current;
@@ -113,6 +123,10 @@ export const VisualEditor: React.FC = () => {
     });
 
     editorRef.current = editor;
+
+    // Track selected element for Claude context
+    editor.on('component:selected',   (c: any) => setSelectedLabel(c?.getName?.() ?? 'element'));
+    editor.on('component:deselected', ()        => setSelectedLabel(null));
 
     // ── Custom blocks ───────────────────────────────────────────────────────
     const bm = editor.BlockManager;
@@ -258,6 +272,63 @@ export const VisualEditor: React.FC = () => {
     editorRef.current?.setDevice(name);
   };
 
+  // ── Claude chat ────────────────────────────────────────────────────────────
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMsgs]);
+
+  const handleClaudeChat = async () => {
+    const text = chatInput.trim();
+    if (!text || chatLoading) return;
+
+    const selected    = editorRef.current?.getSelected();
+    const selectedHtml = selected ? selected.toHTML() : null;
+
+    const userMsg = { role: 'user' as const, content: text };
+    setChatMsgs(prev => [...prev, userMsg]);
+    setChatInput('');
+    setChatLoading(true);
+
+    const system = `You are a web design assistant helping refine Jeremy Dos Santos' portfolio site.
+Design tokens: primary #0066cc, text #1d1d1f, grey #86868b, surface #f5f5f7, border #d2d2d7.
+Font: -apple-system / SF Pro. Apple-influenced minimalism — generous whitespace, tight type.
+Card radius 24px, button radius 9999px, section padding 96px top+bottom.
+${selectedHtml ? `\nCurrently selected element:\n\`\`\`html\n${selectedHtml.slice(0, 3000)}\n\`\`\`` : ''}
+When returning modified HTML wrap it in a single fenced block: \`\`\`html ... \`\`\`
+For copy-only changes just return the text. Be concise and direct.`;
+
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 2048,
+          system,
+          messages: [...chatMsgs, userMsg].map(m => ({ role: m.role, content: m.content })),
+        }),
+      });
+      const data = await res.json();
+      const reply = data.content?.[0]?.text ?? data.error?.message ?? 'No response received.';
+      setChatMsgs(prev => [...prev, { role: 'assistant', content: reply }]);
+    } catch (err: any) {
+      setChatMsgs(prev => [...prev, { role: 'assistant', content: `Error: ${err.message}` }]);
+    }
+    setChatLoading(false);
+  };
+
+  const applyClaudeHtml = (msgContent: string) => {
+    const match = msgContent.match(/```html\n([\s\S]*?)```/);
+    if (!match) return;
+    const html = match[1].trim();
+    const sel  = editorRef.current?.getSelected();
+    if (sel) {
+      sel.replaceWith(html);
+    } else {
+      editorRef.current?.setComponents(html);
+    }
+  };
+
   // ── Render ─────────────────────────────────────────────────────────────────
   const saved = saveLabel.startsWith('✓');
 
@@ -349,6 +420,23 @@ export const VisualEditor: React.FC = () => {
         >
           {saveLabel}
         </button>
+
+        <div style={{ width: 1, height: 20, background: '#2a2a2a', margin: '0 4px' }} />
+
+        {/* ── Ask Claude button ── */}
+        <button
+          onClick={() => setChatOpen(o => !o)}
+          style={{
+            padding: '5px 14px', borderRadius: 9999, fontSize: 12, fontWeight: 600,
+            background: chatOpen ? '#4c1d95' : 'transparent',
+            color: chatOpen ? '#e9d5ff' : '#a78bfa',
+            border: '1px solid #4c1d95',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 5,
+          }}
+        >
+          ✦ Claude{selectedLabel ? ` · ${selectedLabel}` : ''}
+        </button>
       </div>
 
       {/* ── GrapesJS canvas ── */}
@@ -364,6 +452,117 @@ export const VisualEditor: React.FC = () => {
         }}>
           <div style={{ background: '#1e1e1e', borderRadius: 12, padding: '20px 28px', border: '1px solid #333' }}>
             <span style={{ color: '#888', fontSize: 13 }}>Capturing {activePage.label} page…</span>
+          </div>
+        </div>
+      )}
+
+      {/* ── Claude chat panel ── */}
+      {chatOpen && (
+        <div style={{
+          position: 'absolute', right: 0, top: 48, bottom: 0, width: 340,
+          background: '#111', borderLeft: '1px solid #2a2a2a',
+          display: 'flex', flexDirection: 'column', zIndex: 20,
+        }}>
+          {/* Header */}
+          <div style={{ padding: '10px 14px', borderBottom: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <span style={{ color: '#a78bfa', fontSize: 13, fontWeight: 600 }}>✦ Ask Claude</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button
+                onClick={() => setShowKeyInput(s => !s)}
+                style={{ fontSize: 10, color: apiKey ? '#4ade80' : '#f87171', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                {apiKey ? '● key set' : '● no key'}
+              </button>
+              <button onClick={() => setChatOpen(false)} style={{ color: '#555', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, lineHeight: 1, padding: '0 2px' }}>×</button>
+            </div>
+          </div>
+
+          {/* API key input */}
+          {showKeyInput && (
+            <div style={{ padding: '10px 14px', borderBottom: '1px solid #2a2a2a', background: '#0d0d0d', flexShrink: 0 }}>
+              <p style={{ fontSize: 10, color: '#666', marginBottom: 6 }}>Anthropic API key — stored in this browser only</p>
+              <input
+                type="password"
+                placeholder="sk-ant-api03-…"
+                value={apiKey}
+                onChange={e => { setApiKey(e.target.value); localStorage.setItem('claude-api-key', e.target.value); }}
+                style={{ width: '100%', background: '#1a1a1a', border: '1px solid #333', borderRadius: 6, padding: '6px 10px', color: '#ccc', fontSize: 11, outline: 'none', boxSizing: 'border-box' }}
+              />
+            </div>
+          )}
+
+          {/* Selected element indicator */}
+          {selectedLabel && (
+            <div style={{ padding: '5px 14px', background: '#1a0a2e', borderBottom: '1px solid #2a2a2a', fontSize: 10, color: '#a78bfa', flexShrink: 0 }}>
+              ↳ <strong>{selectedLabel}</strong> selected — Claude has its HTML as context
+            </div>
+          )}
+
+          {/* Messages */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {chatMsgs.length === 0 && (
+              <div style={{ color: '#444', fontSize: 11, lineHeight: 1.7 }}>
+                <p style={{ color: '#666', marginBottom: 8 }}>Select an element on the canvas, then ask Claude to refine it.</p>
+                <p>Try:<br />
+                  · "Rewrite this copy to sound more confident"<br />
+                  · "Make this section more minimal"<br />
+                  · "Add a subtle divider below this heading"<br />
+                  · "Improve the visual hierarchy here"
+                </p>
+              </div>
+            )}
+
+            {chatMsgs.map((msg, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{
+                  padding: '8px 12px', borderRadius: msg.role === 'user' ? '10px 10px 3px 10px' : '10px 10px 10px 3px',
+                  background: msg.role === 'user' ? '#0066cc' : '#1e1e1e',
+                  color: msg.role === 'user' ? '#fff' : '#ccc',
+                  fontSize: 12, lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                }}>
+                  {msg.content.replace(/```html[\s\S]*?```/g, '[→ HTML block ready to apply]')}
+                </div>
+                {msg.role === 'assistant' && /```html/.test(msg.content) && (
+                  <button
+                    onClick={() => applyClaudeHtml(msg.content)}
+                    style={{ alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 9999, fontSize: 10, fontWeight: 600, background: '#16a34a', color: '#fff', border: 'none', cursor: 'pointer' }}
+                  >
+                    ↳ Apply to {editorRef.current?.getSelected() ? 'selected element' : 'page'}
+                  </button>
+                )}
+              </div>
+            ))}
+
+            {chatLoading && (
+              <div style={{ color: '#555', fontSize: 11 }}>Claude is thinking…</div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Input */}
+          <div style={{ padding: '10px 14px', borderTop: '1px solid #2a2a2a', display: 'flex', gap: 8, flexShrink: 0 }}>
+            <textarea
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleClaudeChat(); } }}
+              placeholder={apiKey ? 'Ask Claude to refine… (Enter to send)' : 'Set your API key first ↑'}
+              disabled={!apiKey}
+              rows={2}
+              style={{ flex: 1, background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, padding: '7px 10px', color: '#ccc', fontSize: 11, resize: 'none', outline: 'none', lineHeight: 1.5 }}
+            />
+            <button
+              onClick={handleClaudeChat}
+              disabled={chatLoading || !chatInput.trim() || !apiKey}
+              style={{
+                padding: '0 14px', borderRadius: 8, fontSize: 11, fontWeight: 600,
+                background: '#6d28d9', color: '#fff', border: 'none',
+                cursor: chatLoading || !chatInput.trim() || !apiKey ? 'not-allowed' : 'pointer',
+                opacity: chatLoading || !chatInput.trim() || !apiKey ? 0.4 : 1,
+                alignSelf: 'stretch',
+              }}
+            >
+              Send
+            </button>
           </div>
         </div>
       )}
