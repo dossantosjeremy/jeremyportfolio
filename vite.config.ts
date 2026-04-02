@@ -65,12 +65,60 @@ function parseFirstFile(body: Buffer, boundary: string): { filename: string; dat
   const data = body.slice(dataStart, dataEnd === -1 ? body.length : dataEnd);
   return { filename: filenameMatch[1], data };
 }
+// ── Claude API proxy (dev only) ───────────────────────────────────────────────
+// Mirrors the Vercel Edge Function at /api/claude.ts so the chat panel works
+// locally with `npm run dev` without needing `vercel dev`.
+function claudeProxyPlugin() {
+  return {
+    name: 'claude-proxy',
+    configureServer(server: any) {
+      server.middlewares.use(async (req: any, res: any, next: () => void) => {
+        if (!req.url?.startsWith('/api/claude') || req.method !== 'POST') {
+          return next();
+        }
+        const apiKey: string =
+          (req.headers['x-api-key'] as string) ||
+          process.env.ANTHROPIC_API_KEY ||
+          '';
+        if (!apiKey) {
+          res.statusCode = 400;
+          res.setHeader('Content-Type', 'application/json');
+          return res.end(JSON.stringify({ error: 'No API key — enter it in the Claude panel or set ANTHROPIC_API_KEY in .env.local' }));
+        }
+        const chunks: Buffer[] = [];
+        req.on('data', (c: Buffer) => chunks.push(c));
+        req.on('end', async () => {
+          try {
+            const body = Buffer.concat(chunks).toString();
+            const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+              },
+              body,
+            });
+            const data = await upstream.json();
+            res.statusCode = upstream.status;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(data));
+          } catch (err: any) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: err.message }));
+          }
+        });
+      });
+    },
+  };
+}
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
-    plugins: [react(), tailwindcss(), imageUploadPlugin()],
+    plugins: [react(), tailwindcss(), imageUploadPlugin(), claudeProxyPlugin()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },

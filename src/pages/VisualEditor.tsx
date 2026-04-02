@@ -34,12 +34,25 @@ function injectCss(doc: Document, css: string) {
   doc.head.appendChild(style);
 }
 
+/** Inject <link rel="stylesheet"> hrefs — needed in production where CSS is a built file, not <style> tags */
+function injectLinks(doc: Document, hrefs: string[]) {
+  doc.querySelectorAll('link[data-gjs-app]').forEach(el => el.remove());
+  hrefs.forEach(href => {
+    const link = doc.createElement('link');
+    link.rel = 'stylesheet';
+    link.setAttribute('data-gjs-app', 'true');
+    link.href = href;
+    doc.head.appendChild(link);
+  });
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 export const VisualEditor: React.FC = () => {
-  const mountRef        = useRef<HTMLDivElement>(null);
-  const captureRef      = useRef<HTMLIFrameElement>(null);
-  const editorRef       = useRef<any>(null);
-  const capturedCssRef  = useRef('');
+  const mountRef           = useRef<HTMLDivElement>(null);
+  const captureRef         = useRef<HTMLIFrameElement>(null);
+  const editorRef          = useRef<any>(null);
+  const capturedCssRef     = useRef('');
+  const capturedLinksRef   = useRef<string[]>([]);
 
   const [activePage, setActivePage] = useState(PAGES[0]);
   const [status, setStatus]         = useState<'idle' | 'loading' | 'ready'>('idle');
@@ -77,11 +90,16 @@ export const VisualEditor: React.FC = () => {
         const stored  = localStorage.getItem(GJS_OVERRIDE_PREFIX + page.key);
         const html    = stored ? JSON.parse(stored).html : main.innerHTML;
 
-        capturedCssRef.current = captureStyles(doc);
+        capturedCssRef.current   = captureStyles(doc);
+        capturedLinksRef.current = Array.from(doc.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'))
+          .map(l => l.href).filter(Boolean);
 
-        // Inject CSS into GrapesJS canvas document
+        // Inject CSS into GrapesJS canvas document (inline styles + linked files)
         const canvasDoc = editor.Canvas.getDocument();
-        if (canvasDoc) injectCss(canvasDoc, capturedCssRef.current);
+        if (canvasDoc) {
+          injectCss(canvasDoc, capturedCssRef.current);
+          injectLinks(canvasDoc, capturedLinksRef.current);
+        }
 
         editor.setComponents(html);
 
@@ -227,8 +245,9 @@ export const VisualEditor: React.FC = () => {
     // Re-inject CSS whenever the canvas frame reloads
     editor.on('canvas:frame:load', () => {
       const canvasDoc = editor.Canvas.getDocument();
-      if (canvasDoc && capturedCssRef.current) {
-        injectCss(canvasDoc, capturedCssRef.current);
+      if (canvasDoc) {
+        if (capturedCssRef.current)           injectCss(canvasDoc, capturedCssRef.current);
+        if (capturedLinksRef.current.length)  injectLinks(canvasDoc, capturedLinksRef.current);
       }
     });
 
