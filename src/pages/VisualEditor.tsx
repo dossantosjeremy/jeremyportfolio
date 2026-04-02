@@ -382,12 +382,18 @@ For copy-only changes just return the text. Be concise and direct.`;
   const applyClaudeHtml = (msgContent: string) => {
     const match = msgContent.match(/```html\n([\s\S]*?)```/);
     if (!match) return;
-    const html = match[1].trim();
-    const sel  = editorRef.current?.getSelected();
-    if (sel) {
-      sel.replaceWith(html);
+    const html   = match[1].trim();
+    const editor = editorRef.current;
+    if (!editor) return;
+    const sel     = editor.getSelected();
+    const wrapper = editor.getWrapper();
+    if (!sel || sel === wrapper) {
+      // No selection or Body selected — replace the whole canvas
+      editor.setComponents(html);
     } else {
-      editorRef.current?.setComponents(html);
+      // Replace inner content of the selected element
+      sel.components().reset();
+      sel.append(html);
     }
   };
 
@@ -638,7 +644,7 @@ For copy-only changes just return the text. Be concise and direct.`;
                     onClick={() => applyClaudeHtml(msg.content)}
                     style={{ alignSelf: 'flex-start', padding: '4px 12px', borderRadius: 9999, fontSize: 10, fontWeight: 600, background: '#16a34a', color: '#fff', border: 'none', cursor: 'pointer' }}
                   >
-                    ↳ Apply to {editorRef.current?.getSelected() ? 'selected element' : 'page'}
+                    ↳ Apply to {editorRef.current?.getSelected() && editorRef.current?.getSelected() !== editorRef.current?.getWrapper() ? 'selected element' : 'full page'}
                   </button>
                 )}
               </div>
