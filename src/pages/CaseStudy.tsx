@@ -299,14 +299,87 @@ function replaceBlockInMd(fullMd: string, oldRaw: string, newRaw: string): strin
   return fm + updated;
 }
 
+// ── Notion-like contentEditable block editor ─────────────────────────────────
+const InlineEditBlock: React.FC<{
+  block: MdBlock;
+  onSave: (newRaw: string) => void;
+  onCancel: () => void;
+}> = ({ block, onSave, onCancel }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const cancelledRef = React.useRef(false);
+
+  const getDisplayText = (): string => {
+    if (block.type === 'h2') return block.text;
+    if (block.type === 'h3') return block.text;
+    if (block.type === 'p') return block.text;
+    if (block.type === 'blockquote') return block.lines.join('\n');
+    if (block.type === 'ul') return block.items.map(i => `- ${i}`).join('\n');
+    if (block.type === 'ol') return block.items.map((i, n) => `${n + 1}. ${i}`).join('\n');
+    return block.raw;
+  };
+
+  const getRawFromText = (text: string): string => {
+    const t = text.trimEnd();
+    if (block.type === 'h2') return `## ${t}`;
+    if (block.type === 'h3') return `### ${t}`;
+    if (block.type === 'p') return t;
+    if (block.type === 'blockquote') return t.split('\n').map(l => `> ${l}`).join('\n');
+    // ul / ol — text already has "- " / "1. " prefixes
+    return t;
+  };
+
+  const getClassName = (): string => {
+    if (block.type === 'h2') return 'text-3xl font-heading font-bold text-text outline-none whitespace-pre-wrap pb-5 w-full';
+    if (block.type === 'h3') return 'text-lg font-heading font-bold text-text outline-none whitespace-pre-wrap mt-10 mb-4 w-full';
+    if (block.type === 'p') return 'text-grey leading-relaxed outline-none whitespace-pre-wrap w-full';
+    return 'text-grey leading-relaxed outline-none whitespace-pre-wrap w-full font-mono text-sm';
+  };
+
+  React.useEffect(() => {
+    if (!ref.current) return;
+    ref.current.innerText = getDisplayText();
+    ref.current.focus();
+    const range = document.createRange();
+    range.selectNodeContents(ref.current);
+    range.collapse(false);
+    window.getSelection()?.removeAllRanges();
+    window.getSelection()?.addRange(range);
+  }, []); // mount only — never update, preserves cursor
+
+  const handleBlur = () => {
+    if (cancelledRef.current) { cancelledRef.current = false; return; }
+    if (ref.current) onSave(getRawFromText(ref.current.innerText));
+  };
+
+  return (
+    <div
+      ref={ref}
+      contentEditable
+      suppressContentEditableWarning
+      className={`${getClassName()} ring-2 ring-primary/30 ring-offset-2 rounded-lg px-2 -mx-2 min-h-[1em]`}
+      onBlur={handleBlur}
+      onKeyDown={e => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          cancelledRef.current = true;
+          ref.current?.blur();
+          onCancel();
+        }
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          ref.current?.blur();
+        }
+      }}
+    />
+  );
+};
+
 // ── Inline edit wrapper ──────────────────────────────────────────────────────
 type InlineEditOpts = {
   isEditing: boolean;
   editingIdx: number | null;
-  inlineDraft: string;
   onBlockClick: (idx: number, block: MdBlock) => void;
-  onDraftChange: (v: string) => void;
-  onSave: () => void;
+  onSave: (newRaw: string) => void;
   onCancel: () => void;
   onImgReplace: (idx: number) => void;
 };
@@ -317,30 +390,19 @@ function renderBlocks(blocks: MdBlock[], heroImages: { src: string; caption: str
   let h2Count = 0;
   let secondaryImagesInjected = false;
 
-  const { isEditing, editingIdx, inlineDraft, onBlockClick, onDraftChange, onSave, onCancel, onImgReplace } = editOpts ?? {};
+  const { isEditing, editingIdx, onBlockClick, onSave, onCancel, onImgReplace } = editOpts ?? {};
 
   // Wrap a block node with inline-edit hover + click behaviour
   const wrapEditable = (key: string, blockIdx: number, block: MdBlock, node: React.ReactNode) => {
     if (!isEditing) return <React.Fragment key={key}>{node}</React.Fragment>;
     if (editingIdx === blockIdx) {
       return (
-        <div key={key} className="relative">
-          <textarea
-            autoFocus
-            className="w-full border-2 border-primary rounded-card p-4 font-mono text-sm leading-relaxed resize-none outline-none min-h-[100px] bg-white"
-            value={inlineDraft}
-            onChange={e => onDraftChange?.(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); onSave?.(); }
-              if (e.key === 'Escape') { onCancel?.(); }
-            }}
-            rows={Math.max(3, (inlineDraft ?? '').split('\n').length + 1)}
-          />
-          <div className="flex gap-2 mt-2">
-            <button onClick={onSave} className="bg-primary text-white px-4 py-1.5 rounded-btn text-sm font-medium hover:bg-primary/90 transition-colors">Save</button>
-            <button onClick={onCancel} className="text-grey px-4 py-1.5 text-sm hover:text-text transition-colors">Cancel</button>
-          </div>
-        </div>
+        <InlineEditBlock
+          key={key}
+          block={block}
+          onSave={newRaw => onSave?.(newRaw)}
+          onCancel={() => onCancel?.()}
+        />
       );
     }
     return (
@@ -651,15 +713,15 @@ export const CaseStudy = () => {
   };
 
   // ── Inline editing state ──────────────────────────────────────────────────
-  const [inlineEdit, setInlineEdit] = React.useState<{ blockIdx: number; draft: string; oldRaw: string } | null>(null);
+  const [inlineEdit, setInlineEdit] = React.useState<{ blockIdx: number; oldRaw: string } | null>(null);
   const [heroImgReplace, setHeroImgReplace] = React.useState(false);
   const [inlineImgBlockIdx, setInlineImgBlockIdx] = React.useState<number | null>(null);
   const inlineImgInputRef = React.useRef<HTMLInputElement>(null);
   const heroImgInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleInlineSave = () => {
+  const handleInlineSave = (newRaw: string) => {
     if (!inlineEdit) return;
-    const newMd = replaceBlockInMd(currentMd, inlineEdit.oldRaw, inlineEdit.draft);
+    const newMd = replaceBlockInMd(currentMd, inlineEdit.oldRaw, newRaw);
     localStorage.setItem(EDIT_PREFIX + EDIT_KEY, newMd);
     setCurrentMd(newMd);
     setEditorDraft(newMd);
@@ -860,9 +922,7 @@ export const CaseStudy = () => {
               renderBlocks(blocks, images, {
                 isEditing,
                 editingIdx: inlineEdit?.blockIdx ?? null,
-                inlineDraft: inlineEdit?.draft ?? '',
-                onBlockClick: (idx, block) => setInlineEdit({ blockIdx: idx, draft: block.raw, oldRaw: block.raw }),
-                onDraftChange: v => setInlineEdit(prev => prev ? { ...prev, draft: v } : null),
+                onBlockClick: (idx, block) => setInlineEdit({ blockIdx: idx, oldRaw: block.raw }),
                 onSave: handleInlineSave,
                 onCancel: () => setInlineEdit(null),
                 onImgReplace: idx => {
