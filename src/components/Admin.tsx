@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { portfolioProjects } from '../data/portfolioData';
 import { useEditMode, EDIT_PREFIX } from '../context/EditContext';
-import { LogOut, Pencil, ExternalLink, RotateCcw, Lock } from 'lucide-react';
+import { LogOut, Pencil, ExternalLink, RotateCcw, Lock, Layers } from 'lucide-react';
+import { GJS_OVERRIDE_PREFIX } from '../pages/VisualEditor';
 
 const COMPANY_GRADIENTS: Record<string, string> = {
   'PSA Peugeot Citroën': 'from-slate-700 to-slate-900',
@@ -155,6 +156,12 @@ export const Admin = () => {
           <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-green-200">
             <Pencil size={11} /> Inline editor active — use the pencil on any page
           </span>
+          <Link
+            to="/admin/visual-editor"
+            className="inline-flex items-center gap-1.5 bg-primary text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-primary/90 transition-colors"
+          >
+            <Layers size={11} /> Visual Editor
+          </Link>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 text-grey hover:text-primary transition-colors text-sm"
@@ -261,7 +268,7 @@ export const Admin = () => {
           onClick={() => {
             if (!confirm('Reset ALL content overrides across the entire site?')) return;
             Object.keys(localStorage)
-              .filter(k => k.startsWith(EDIT_PREFIX))
+              .filter(k => k.startsWith(EDIT_PREFIX) || k.startsWith(GJS_OVERRIDE_PREFIX))
               .forEach(k => localStorage.removeItem(k));
             window.location.reload();
           }}

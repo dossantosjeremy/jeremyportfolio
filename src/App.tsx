@@ -13,10 +13,32 @@ import { Services } from './components/Services';
 import { Admin } from './components/Admin';
 import { LogoStrip, Challenges, Toolkit, FAQ, Partnerships, CTA } from './components/StaticSections';
 import { CaseStudy } from './pages/CaseStudy';
+import { VisualEditor, GJS_OVERRIDE_PREFIX } from './pages/VisualEditor';
 import { AnimatedText } from './components/ui/animated-text';
 import { NavBar } from './components/ui/tubelight-navbar';
 import { EditProvider } from './context/EditContext';
 import { EditModeUI } from './components/EditModeUI';
+
+// ── GrapesJS page override ───────────────────────────────────────────────────
+// When a visual editor save exists for a page, render its HTML instead of
+// the React component. Nav + Footer stay React so routing still works.
+const WithGjsOverride: React.FC<{ pageKey: string; children: React.ReactNode }> = ({ pageKey, children }) => {
+  const [override] = React.useState<{ html: string; css: string } | null>(() => {
+    const raw = localStorage.getItem(GJS_OVERRIDE_PREFIX + pageKey);
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch { return null; }
+  });
+
+  if (override) {
+    return (
+      <>
+        {override.css && <style dangerouslySetInnerHTML={{ __html: override.css }} />}
+        <div dangerouslySetInnerHTML={{ __html: override.html }} />
+      </>
+    );
+  }
+  return <>{children}</>;
+};
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -80,15 +102,16 @@ function App() {
 
           <main>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/work" element={<Work />} />
+              <Route path="/" element={<WithGjsOverride pageKey="home"><Home /></WithGjsOverride>} />
+              <Route path="/services" element={<WithGjsOverride pageKey="services"><Services /></WithGjsOverride>} />
+              <Route path="/work" element={<WithGjsOverride pageKey="work"><Work /></WithGjsOverride>} />
               <Route path="/work/:slug" element={<CaseStudy />} />
-              <Route path="/process" element={<Process />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/process" element={<WithGjsOverride pageKey="process"><Process /></WithGjsOverride>} />
+              <Route path="/profile" element={<WithGjsOverride pageKey="profile"><Profile /></WithGjsOverride>} />
               <Route path="/demo" element={<TimelineDemo />} />
               <Route path="/contact" element={<Footer />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/visual-editor" element={<VisualEditor />} />
             </Routes>
           </main>
 
