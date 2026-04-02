@@ -380,18 +380,29 @@ For copy-only changes just return the text. Be concise and direct.`;
   };
 
   const applyClaudeHtml = (msgContent: string) => {
-    const match = msgContent.match(/```html\n([\s\S]*?)```/);
+    // \s* instead of \n — Claude sometimes adds a space before the newline
+    const match = msgContent.match(/```html\s*([\s\S]*?)```/);
     if (!match) return;
-    const html   = match[1].trim();
+    let html = match[1].trim();
     const editor = editorRef.current;
     if (!editor) return;
+
+    // If Claude returned a full HTML document, extract just the <body> content
+    const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    if (bodyMatch) html = bodyMatch[1].trim();
+
+    // Strip a bare <html> wrapper if present but no <body> was found
+    if (!bodyMatch && /<html[\s>]/i.test(html)) {
+      html = html.replace(/<\/?html[^>]*>/gi, '').replace(/<\/?head[^>]*>[\s\S]*?<\/head>/gi, '').trim();
+    }
+
     const sel     = editor.getSelected();
-    const wrapper = editor.getWrapper();
-    if (!sel || sel === wrapper) {
-      // No selection or Body selected — replace the whole canvas
+    const wrapper = editor.getWrapper?.();
+    if (!sel || sel === wrapper || sel.get?.('tagName') === 'body') {
+      // Nothing selected, Body selected, or body tag — replace whole canvas
       editor.setComponents(html);
     } else {
-      // Replace inner content of the selected element
+      // Replace inner content of the specifically selected element
       sel.components().reset();
       sel.append(html);
     }
