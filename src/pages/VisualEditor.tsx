@@ -380,30 +380,45 @@ For copy-only changes just return the text. Be concise and direct.`;
   };
 
   const applyClaudeHtml = (msgContent: string) => {
-    // Grab everything after ```html — do NOT require a closing ``` because
-    // Claude's long responses are often cut off before the closing fence.
+    // ── Step 1: extract the code block ──────────────────────────────────────
+    // Greedy match — no closing ``` required (Claude often truncates before it)
     const openMatch = msgContent.match(/```html\s*([\s\S]*)/);
     if (!openMatch) return;
-
-    // Strip trailing ``` (and anything after) if it happens to be present
+    // Strip closing ``` if present, plus anything after it
     let html = openMatch[1].replace(/```[\s\S]*$/, '').trim();
     if (!html) return;
 
     const editor = editorRef.current;
     if (!editor) return;
 
-    // If Claude returned a full HTML document, pull out just the <body> content.
-    // The closing </body> may also be missing if the response was cut off.
-    const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)(?:<\/body>|$)/i);
-    if (bodyMatch) {
-      html = bodyMatch[1].trim();
-    } else if (/<html[\s>]/i.test(html)) {
-      html = html
-        .replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
-        .replace(/<\/?html[^>]*>/gi, '')
-        .trim();
+    // ── Step 2: strip full-document boilerplate ──────────────────────────────
+    if (/<!DOCTYPE/i.test(html) || /<html[\s>]/i.test(html)) {
+      // Find where <body> starts
+      const bodyTagMatch = html.match(/<body[^>]*>/i);
+      if (bodyTagMatch && bodyTagMatch.index != null) {
+        // Slice from end of <body ...> to end of string (or </body>)
+        html = html
+          .slice(bodyTagMatch.index + bodyTagMatch[0].length)
+          .replace(/<\/body[\s\S]*$/i, '')
+          .trim();
+      } else {
+        // Response was cut off inside <head> — <body> tag never appeared.
+        // Remove DOCTYPE + <html> + <head> (complete OR truncated to end).
+        html = html
+          .replace(/<!DOCTYPE[^>]*>/gi, '')
+          .replace(/<html[^>]*>/gi, '')
+          // Complete <head>...</head>
+          .replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '')
+          // Truncated <head> with no closing tag — nuke everything from <head> onward
+          .replace(/<head[^>]*>[\s\S]*/gi, '')
+          .replace(/<\/html>/gi, '')
+          .trim();
+      }
     }
 
+    if (!html) return; // nothing usable after stripping
+
+    // ── Step 3: apply to GrapesJS canvas ────────────────────────────────────
     try {
       const sel     = editor.getSelected();
       const wrapper = editor.getWrapper?.();
