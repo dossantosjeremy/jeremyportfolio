@@ -81,14 +81,19 @@ export const VisualEditor: React.FC = () => {
   );
 
   // ── Claude chat state ──────────────────────────────────────────────────────
+  type Attachment = { name: string; kind: 'image' | 'pdf' | 'text'; mediaType: string; data: string; preview?: string };
+  type ChatMsg    = { role: 'user' | 'assistant'; content: string; attachments?: Pick<Attachment,'name'|'kind'|'preview'>[] };
+
   const [chatOpen,    setChatOpen]    = useState(false);
-  const [chatMsgs,    setChatMsgs]    = useState<{role:'user'|'assistant';content:string}[]>([]);
+  const [chatMsgs,    setChatMsgs]    = useState<ChatMsg[]>([]);
   const [chatInput,   setChatInput]   = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [apiKey,      setApiKey]      = useState(() => localStorage.getItem('claude-api-key') ?? '');
   const [showKeyInput,setShowKeyInput]= useState(false);
   const [selectedLabel,setSelectedLabel] = useState<string|null>(null);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const chatEndRef  = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // ── History state ──────────────────────────────────────────────────────────
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -339,16 +344,54 @@ export const VisualEditor: React.FC = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMsgs]);
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    Array.from(e.target.files ?? []).forEach(file => {
+      const reader = new FileReader();
+      if (file.type.startsWith('image/')) {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          setAttachments(prev => [...prev, { name: file.name, kind: 'image', mediaType: file.type, data: dataUrl.split(',')[1], preview: dataUrl }]);
+        };
+      } else if (file.type === 'application/pdf') {
+        reader.readAsDataURL(file);
+        reader.onload = () => setAttachments(prev => [...prev, { name: file.name, kind: 'pdf', mediaType: 'application/pdf', data: (reader.result as string).split(',')[1] }]);
+      } else {
+        reader.readAsText(file);
+        reader.onload = () => setAttachments(prev => [...prev, { name: file.name, kind: 'text', mediaType: file.type || 'text/plain', data: reader.result as string }]);
+      }
+    });
+    e.target.value = '';
+  };
+
   const handleClaudeChat = async () => {
     const text = chatInput.trim();
-    if (!text || chatLoading) return;
+    if ((!text && attachments.length === 0) || chatLoading) return;
 
     const selected    = editorRef.current?.getSelected();
     const selectedHtml = selected ? selected.toHTML() : null;
 
-    const userMsg = { role: 'user' as const, content: text };
+    // Build multimodal content for the API
+    const apiContent: any[] = [];
+    attachments.forEach(att => {
+      if (att.kind === 'image') {
+        apiContent.push({ type: 'image', source: { type: 'base64', media_type: att.mediaType, data: att.data } });
+      } else if (att.kind === 'pdf') {
+        apiContent.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: att.data } });
+      } else {
+        apiContent.push({ type: 'text', text: `[File: ${att.name}]\n\`\`\`\n${att.data.slice(0, 60000)}\n\`\`\`` });
+      }
+    });
+    if (text) apiContent.push({ type: 'text', text });
+
+    const userMsg: ChatMsg = {
+      role: 'user',
+      content: text || `[${attachments.length} file${attachments.length !== 1 ? 's' : ''} attached]`,
+      attachments: attachments.map(a => ({ name: a.name, kind: a.kind, preview: a.preview })),
+    };
     setChatMsgs(prev => [...prev, userMsg]);
     setChatInput('');
+    setAttachments([]);
     setChatLoading(true);
 
     const system = `You are a web design assistant helping refine Jeremy Dos Santos' portfolio site.
@@ -359,16 +402,14 @@ ${selectedHtml ? `\nCurrently selected element:\n\`\`\`html\n${selectedHtml.slic
 When returning modified HTML wrap it in a single fenced block: \`\`\`html ... \`\`\`
 For copy-only changes just return the text. Be concise and direct.`;
 
+    const historyMsgs = chatMsgs.map(m => ({ role: m.role, content: m.content }));
+    const newApiMsg   = { role: 'user' as const, content: apiContent.length === 1 && apiContent[0].type === 'text' ? apiContent[0].text : apiContent };
+
     try {
       const res = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 2048,
-          system,
-          messages: [...chatMsgs, userMsg].map(m => ({ role: m.role, content: m.content })),
-        }),
+        body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 4096, system, messages: [...historyMsgs, newApiMsg] }),
       });
       const data = await res.json();
       const reply = data.content?.[0]?.text ?? data.error?.message ?? 'No response received.';
@@ -667,6 +708,19 @@ For copy-only changes just return the text. Be concise and direct.`;
 
             {chatMsgs.map((msg, i) => (
               <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {msg.attachments && msg.attachments.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                    {msg.attachments.map((att, ai) => (
+                      att.kind === 'image' && att.preview ? (
+                        <img key={ai} src={att.preview} alt={att.name} style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 8, border: '1px solid #333' }} />
+                      ) : (
+                        <div key={ai} style={{ background: '#1e1e1e', border: '1px solid #333', borderRadius: 8, padding: '5px 9px', fontSize: 10, color: '#888', display: 'flex', alignItems: 'center', gap: 5 }}>
+                          <span>{att.kind === 'pdf' ? '📄' : '📝'}</span> {att.name}
+                        </div>
+                      )
+                    ))}
+                  </div>
+                )}
                 <div style={{
                   padding: '8px 12px', borderRadius: msg.role === 'user' ? '10px 10px 3px 10px' : '10px 10px 10px 3px',
                   background: msg.role === 'user' ? '#0066cc' : '#1e1e1e',
@@ -692,25 +746,61 @@ For copy-only changes just return the text. Be concise and direct.`;
             <div ref={chatEndRef} />
           </div>
 
+          {/* Attachment preview strip */}
+          {attachments.length > 0 && (
+            <div style={{ padding: '8px 14px', borderTop: '1px solid #2a2a2a', display: 'flex', flexWrap: 'wrap', gap: 6, background: '#0d0d0d', flexShrink: 0 }}>
+              {attachments.map((att, i) => (
+                <div key={i} style={{ position: 'relative', display: 'inline-flex' }}>
+                  {att.kind === 'image' && att.preview ? (
+                    <img src={att.preview} alt={att.name} style={{ width: 56, height: 44, objectFit: 'cover', borderRadius: 6, border: '1px solid #333' }} />
+                  ) : (
+                    <div style={{ background: '#1e1e1e', border: '1px solid #333', borderRadius: 6, padding: '5px 8px', fontSize: 10, color: '#888', display: 'flex', alignItems: 'center', gap: 4, maxWidth: 120 }}>
+                      <span>{att.kind === 'pdf' ? '📄' : '📝'}</span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{att.name}</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => setAttachments(prev => prev.filter((_, j) => j !== i))}
+                    style={{ position: 'absolute', top: -5, right: -5, width: 16, height: 16, borderRadius: '50%', background: '#333', color: '#ccc', border: 'none', cursor: 'pointer', fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
+                  >×</button>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Input */}
-          <div style={{ padding: '10px 14px', borderTop: '1px solid #2a2a2a', display: 'flex', gap: 8, flexShrink: 0 }}>
+          <div style={{ padding: '10px 14px', borderTop: '1px solid #2a2a2a', display: 'flex', gap: 8, flexShrink: 0, alignItems: 'flex-end' }}>
+            <input
+              ref={fileInputRef} type="file" multiple
+              accept="image/*,application/pdf,.txt,.md,.html,.css,.js,.ts,.tsx,.json,.csv"
+              onChange={handleFileUpload}
+              style={{ display: 'none' }}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={!apiKey}
+              title="Attach image, PDF, or text file"
+              style={{ padding: '7px 8px', borderRadius: 8, fontSize: 14, background: 'transparent', color: attachments.length > 0 ? '#a78bfa' : '#555', border: '1px solid #333', cursor: apiKey ? 'pointer' : 'not-allowed', flexShrink: 0, lineHeight: 1 }}
+            >
+              📎
+            </button>
             <textarea
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleClaudeChat(); } }}
-              placeholder={apiKey ? 'Ask Claude to refine… (Enter to send)' : 'Set your API key first ↑'}
+              placeholder={apiKey ? 'Ask Claude… attach files with 📎 (Enter to send)' : 'Set your API key first ↑'}
               disabled={!apiKey}
               rows={2}
               style={{ flex: 1, background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, padding: '7px 10px', color: '#ccc', fontSize: 11, resize: 'none', outline: 'none', lineHeight: 1.5 }}
             />
             <button
               onClick={handleClaudeChat}
-              disabled={chatLoading || !chatInput.trim() || !apiKey}
+              disabled={chatLoading || (!chatInput.trim() && attachments.length === 0) || !apiKey}
               style={{
                 padding: '0 14px', borderRadius: 8, fontSize: 11, fontWeight: 600,
                 background: '#6d28d9', color: '#fff', border: 'none',
-                cursor: chatLoading || !chatInput.trim() || !apiKey ? 'not-allowed' : 'pointer',
-                opacity: chatLoading || !chatInput.trim() || !apiKey ? 0.4 : 1,
+                cursor: chatLoading || (!chatInput.trim() && attachments.length === 0) || !apiKey ? 'not-allowed' : 'pointer',
+                opacity: chatLoading || (!chatInput.trim() && attachments.length === 0) || !apiKey ? 0.4 : 1,
                 alignSelf: 'stretch',
               }}
             >
